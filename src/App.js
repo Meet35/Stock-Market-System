@@ -1,7 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
 import Home from './cmp/Home';
-import Login from './cmp/Login';
 import Auth from './cmp/Auth';
 import About from './cmp/About';
 import Protected from './cmp/Protected';
@@ -19,7 +18,6 @@ function App() {
   return (
     <div className="App">
       
-      <Auth></Auth>
       <Router>
         <Nav/>
         {/* <Link to="auth" > Home </Link> */}
@@ -33,7 +31,7 @@ function App() {
             <Protected cmp={Home}/>
           </Route>
           <Route path="/">
-            <Login />
+            <Auth />
           </Route>
         </Switch>
       </Router>
