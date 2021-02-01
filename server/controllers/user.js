@@ -116,23 +116,78 @@ exports.UpdateUser = (req, res) => {
 
 const secret = 'test';
 
+/*
+export function signin(req, res) {
+  const email  = req.body.email;
+  const password = req.body.password;
+  var oldUser;
+  //try {
+ // const oldUser =User.findOne({ email });
+  User.findOne({email},function(err,result){
+    if (err){ 
+      return res.status(404).json({ message: "User doesn't exist" });
+    } 
+    else{ 
+      oldUser = result;
+      solvedin5hours(oldUser); 
+    } 
+  })
+  function solvedin5hours(oldUser){
+    bcrypt.compare(password, oldUser.password).then((res) => {
+      if(res){
+        const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "1m" });
+        return res.status(200).json({ result: oldUser, token });
+      }else
+          return res.status(400).json({ message : "Invalid credentials"});
+    });
+
+  }
+
+ // if (!oldUser)
+  //  return res.status(404).json({ message: "User doesn't exist" });
+
+  //const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
+  //  console.log(isPasswordCorrect);
+ /* bcrypt.compare(password, oldUser.password, function (err, res) {
+    if (err) {
+      // handle error
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+    if (res){
+      // Send JWT
+      const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "1m" });
+    return res.status(200).json({ result: oldUser, token });
+  }
+});
+
+
+   // if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
+
+   // const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "1m" });
+
+   // res.status(200).json({ result: oldUser, token });
+ // } catch (err) {
+  //  res.status(500).json({ message: err });
+ // }
+};*/
+
 export const signin = async (req, res) => {
-  const { email, password } = req.body;
-
+  const email  = req.body.email;
+  const password = req.body.password;
   try {
-    const oldUser = await User.findOne({ email });
+  const oldUser =await User.findOne({ email });
+  if (!oldUser)
+    return res.status(404).json({ message: "User doesn't exist" });
 
-    if (!oldUser) return res.status(404).json({ message: "User doesn't exist" });
+  const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
 
-    const isPasswordCorrect = await bcrypt.compare(password, oldUser.password);
+  if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
 
-    if (!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
+  const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "1h" });
 
-    const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, secret, { expiresIn: "1h" });
-
-    res.status(200).json({ result: oldUser, token });
+  res.status(200).json({ result: oldUser, token });
   } catch (err) {
-    res.status(500).json({ message: "Something went wrong" });
+    res.status(500).json({ message: err });
   }
 };
 
@@ -143,17 +198,21 @@ export const signup = async (req, res) => {
     const oldUser = await User.findOne({ email });
 
     if (oldUser) return res.status(400).json({ message: "User already exists" });
-
+    
+    const repassword = password;
+    
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const result = await User.create({ email, password: hashedPassword, name });
+    const isPasswordCorrect = await bcrypt.compare(repassword, hashedPassword);
 
+    const result = await User.create({ email, password: hashedPassword, name });
+    
     const token = jwt.sign( { email: result.email, id: result._id }, secret, { expiresIn: "1h" } );
 
     res.status(201).json({ result, token });
+
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
-    
+    res.status(500).json({ message: error });
     console.log(error);
   }
 };

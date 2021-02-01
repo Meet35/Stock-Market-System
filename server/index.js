@@ -7,8 +7,8 @@ import userRouter from "./routes/user.js";
 
 const app = express();
 
-app.use(bodyParser.json({ limit: '100mb', extended: true }))
-app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded())
 app.use(cors());
 
 app.use("/user", userRouter);
@@ -16,7 +16,7 @@ app.use("/user", userRouter);
 const CONNECTION_URL = 'mongodb://localhost:27017/stockdb';
 const PORT = 5000;
 
-mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true ,'useCreateIndex': true })
   .then(() => app.listen(PORT, () => console.log(`Server Running on Port: http://localhost:${PORT}`)))
   .catch((error) => console.log(`${error} did not connect`));
 
