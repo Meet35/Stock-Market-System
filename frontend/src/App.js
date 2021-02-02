@@ -1,10 +1,10 @@
-import './App.css';
+/*import './App.css';
 import Home from './cmp/Home';
 import Auth from './cmp/Auth';
 import About from './cmp/About';
 import Protected from './cmp/Protected';
 import Nav from './cmp/Nav';
-// import .Home.js from './cmp/Home';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 import {
   BrowserRouter as Router,
@@ -15,26 +15,157 @@ import {
 function App() {
   return (
     <div className="App">
-      
+
       <Router>
-        <Nav/>
-        {/* <Link to="auth" > Home </Link> */}
-        <Switch>
-          <Route path="/about">
-            {/* <About /> */}
-            <Protected cmp={About}/>
-          </Route>
-          <Route path="/home">
-            {/* <Home /> */}
-            <Protected cmp={Home}/>
-          </Route>
-          <Route path="/">
-            <Auth />
-          </Route>
-        </Switch>
-      </Router>
-    </div>
-  );
+        <Nav />
+        {/* <Link to="auth" > Home </Link> *//*}
+<Switch>
+<Route path="/about">
+{/* <About /> *//*}
+<Protected cmp={About} />
+</Route>
+<Route path="/home">
+{/* <Home /> *//*}
+<Protected cmp={Home} />
+</Route>
+<Route path="/">
+<Auth />
+</Route>
+</Switch>
+</Router>
+</div>
+);
 }
+
+export default App;
+*/
+
+/*
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Router, Switch, Route, Link } from "react-router-dom";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+
+import { logout } from "./actions/auth";
+import { clearMessage } from "./actions/message";
+
+import { history } from "./helpers/history";
+
+const App = () => {
+
+  const { user: currentUser } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    history.listen((location) => {
+      dispatch(clearMessage()); // clear message when changing location
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (currentUser) {
+    }
+  }, [currentUser]);
+
+  const logOut = () => {
+    dispatch(logout());
+  };
+
+  return (
+    <Router history={history}>
+      <div>
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <Link to={"/"} className="navbar-brand">
+            bezKoder
+          </Link>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/home"} className="nav-link">
+                Home
+              </Link>
+            </li>
+
+            {currentUser && (
+              <li className="nav-item">
+                <Link to={"/user"} className="nav-link">
+                  User
+                </Link>
+              </li>
+            )}
+          </div>
+
+          {currentUser ? (
+            <div className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to={"/profile"} className="nav-link">
+                  {currentUser.name}
+                </Link>
+              </li>
+              <li className="nav-item">
+                <a href="/login" className="nav-link" onClick={logOut}>
+                  LogOut
+                </a>
+              </li>
+            </div>
+          ) : (
+              <div className="navbar-nav ml-auto">
+                <li className="nav-item">
+                  <Link to={"/login"} className="nav-link">
+                    Login
+                </Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link to={"/register"} className="nav-link">
+                    Sign Up
+                </Link>
+                </li>
+              </div>
+            )}
+        </nav>
+
+        <div className="container mt-3">
+          <Switch>
+            <Route exact path={["/", "/home"]} component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/profile" component={Profile} />
+          </Switch>
+        </div>
+      </div>
+    </Router>
+  );
+};
+
+export default App;
+*/
+
+
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Container } from '@material-ui/core';
+
+import Home from './components/Home/Home';
+import Navbar from './components/Navbar/Navbar';
+import Auth from './components/Auth/Auth';
+
+const App = () => (
+  <BrowserRouter>
+    <Container maxWidth="lg">
+      <Navbar />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/auth" exact component={Auth} />
+      </Switch>
+    </Container>
+  </BrowserRouter>
+);
 
 export default App;
