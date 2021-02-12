@@ -30,7 +30,7 @@ const Home = () => {
     return (
         <div>
             <div>
-                <input type="text" value={q} onChange={(e) => setQ(e.target.value)} />
+                <input placeholder="Search for... " type="text" value={q} onChange={(e) => setQ(e.target.value)} />
             </div>
             <div>
                 <Datatable data={search(data)} />
