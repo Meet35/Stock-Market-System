@@ -49,7 +49,7 @@
 //   );
 // };
 
-
+/*
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -122,9 +122,9 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* <TableCell padding="checkbox"> */}
+        { <TableCell padding="checkbox"> }
           
-        {/* </TableCell> */}
+        { </TableCell> }
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -344,19 +344,19 @@ const Datatable = ({data}) =>{
                       key={row.name}
                       selected={isItemSelected}
                     >
-                      {/* <TableCell padding="checkbox">
+                      { <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
-                      </TableCell> */}
+                      </TableCell> }
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.symbol}
                       </TableCell>
                       <TableCell align="right">{row.name}</TableCell>
-                      {/* <TableCell align="right">{row.fat}</TableCell>
+                      { <TableCell align="right">{row.fat}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell> */}
+                      <TableCell align="right">{row.protein}</TableCell> }
                     </TableRow>
                   );
                 })}
@@ -563,6 +563,30 @@ const Datatable = ({data}) =>{
 //     </TableContainer>
 //   );
 // }
+*/
 
 
-export default Datatable;
+
+
+import React from 'react';
+
+
+export default function Datatable({ data }) {
+  const columns = data[0] && Object.keys(data[0]);
+  return (
+    <table cellPadding={0} cellSpacing={0}>
+      <thead>
+        <tr>{data[0] && columns.map((heading) => <th>{heading}</th>)}</tr>
+      </thead>
+      <tbody>
+        {data.map(row => <tr>
+          {
+            columns.map(column => <td>{row[column]}</td>)
+          }
+        </tr>)
+
+        }
+      </tbody>
+    </table>
+  )
+}

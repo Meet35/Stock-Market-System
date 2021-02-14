@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import User from "../models/user.js";
+import Watchlist from "../models/watchlist.js";
 
 const secret = 'test';
 
@@ -26,12 +27,14 @@ export const signin = async (req, res) => {
 };
 
 export const signup = async (req, res) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { email, password, confirmPassword, firstName, lastName } = req.body;
 
   try {
     const oldUser = await User.findOne({ email });
 
     if (oldUser) return res.status(400).json({ message: "User already exists" });
+
+    if (password != confirmPassword) return res.status(400).json({ message: "Incorrect Password" });
 
     const repassword = password;
 
@@ -40,6 +43,8 @@ export const signup = async (req, res) => {
     const isPasswordCorrect = await bcrypt.compare(repassword, hashedPassword);
 
     const result = await User.create({ email, password: hashedPassword, name: `${firstName} ${lastName}` });
+
+    const watchlist = await Watchlist.create({ symbols: [], userid: result._id });
 
     const token = jwt.sign({ email: result.email, id: result._id }, secret, { expiresIn: "1h" });
 

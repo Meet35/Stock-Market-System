@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import Datatable from "../Datatable/Datatable";
-import SelectSearch from 'react-select-search';
+import * as api from '../../api/index.js';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from '@material-ui/core';
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 const Home = () => {
     const [data, setData] = useState([])
+    const [list, setList] = useState("")
     const [option, setOption] = useState([])
-    const [q, setQ] = useState("")
+    const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
+
+    async function getList() {
+        try {
+            const { data } = await api.getWatchlist();
+            setList(data);
+            console.log(data.symbols);
+            console.log(list);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function updating() {
+        try {
+            const { result } = await api.updateWatchlist({ symbol: "IC" });
+            console.log(result.symbols);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     useEffect(() => {
         fetch("http://localhost:5000/stock")
@@ -17,28 +39,40 @@ const Home = () => {
                 console.log(data);
                 setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
             });
+        getList();
     }, [])
 
-    function search(rows) {
-        return rows.filter(
-            (row) =>
-                row.symbol.toLowerCase().indexOf(q.toLowerCase()) > -1 ||
-                row.name.toLowerCase().indexOf(q.toLowerCase()) > -1
-        );
-    }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        console.log(q);
+    };
 
     return (
-        <div>
-            <div>
-                <input placeholder="Search for... " type="text" value={q} onChange={(e) => setQ(e.target.value)} />
-            </div>
-            <div>
-                <Datatable data={search(data)} />
-                {//<SelectSearch options={option} value="sv" name="language" placeholder="Add stock to Dashboard" />
-                }
+        <Container maxWidth="lg" >
+            <form onSubmit={handleSubmit}>
+                <Grid container spacing={4} justify="center" alignItems="center">
+                    <Grid item xs>
+                        <Autocomplete
+                            id="combo-box-demo"
+                            options={data}
+                            getOptionLabel={(option) => option.symbol + " - " + option.name}
+                            style={{ width: 600 }}
+                            autoComplete
+                            value={q}
+                            onChange={(event, newValue) => {
+                                setQ(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} label="search stocks" variant="outlined" />}
+                        />
+                    </Grid>
+                    <Grid item xs>
+                        <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button>
+                    </Grid>
+                </Grid>
+            </form>
 
-            </div>
-        </div>
+        </Container>
     );
 };
 
