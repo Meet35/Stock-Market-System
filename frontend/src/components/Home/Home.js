@@ -6,8 +6,8 @@ require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 const Home = () => {
-    const [data, setData] = useState([])
-    const [list, setList] = useState("")
+    const [info, setInfo] = useState([])
+    const [list, setList] = useState([])
     const [option, setOption] = useState([])
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
 
@@ -15,17 +15,16 @@ const Home = () => {
         try {
             const { data } = await api.getWatchlist();
             setList(data);
-            console.log(data.symbols);
-            console.log(list);
         } catch (error) {
             console.log(error);
         }
     }
 
-    async function updating() {
+    async function updating(symbol) {
         try {
-            const { result } = await api.updateWatchlist({ symbol: "IC" });
-            console.log(result.symbols);
+            const { data } = await api.updateWatchlist({ symbol });
+            //console.log(data);
+            //getList();
         } catch (error) {
             console.log(error);
         }
@@ -33,18 +32,19 @@ const Home = () => {
 
     useEffect(() => {
         fetch("http://localhost:5000/stock")
-            .then((response) => { console.log(response); return response.json(); })
+            .then((response) => { return response.json(); })
             .then((data) => {
-                setData(data);
+                setInfo(data);
                 console.log(data);
                 setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
             });
         getList();
     }, [])
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
+        await updating(q.symbol);
+        await getList();
         console.log(q);
     };
 
@@ -55,7 +55,7 @@ const Home = () => {
                     <Grid item xs>
                         <Autocomplete
                             id="combo-box-demo"
-                            options={data}
+                            options={info}
                             getOptionLabel={(option) => option.symbol + " - " + option.name}
                             style={{ width: 600 }}
                             autoComplete
@@ -72,6 +72,7 @@ const Home = () => {
                 </Grid>
             </form>
 
+            {list.symbols}
         </Container>
     );
 };
