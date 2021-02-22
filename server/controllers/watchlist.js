@@ -22,7 +22,8 @@ export const updateWatchlist = async (req, res) => {
     // console.log(symbol);
     //console.log(symbol.symbol);
     if (!req.userId) {
-        return res.json({ message: "Unauthenticated" });
+        //console.log(req.userId);
+        return res.json({ message: "why this" });
     }
     try {
         const watchlist = await Watchlist.findOne({ userid: req.userId });

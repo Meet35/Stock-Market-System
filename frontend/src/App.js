@@ -155,6 +155,9 @@ import { Container } from '@material-ui/core';
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import Auth from './components/Auth/Auth';
+//import { createRequire } from 'module';
+//const require = createRequire(import.meta.url);
+require('dotenv').config();
 
 const App = () => (
   <BrowserRouter>
