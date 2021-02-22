@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as api from '../../api/index.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from '@material-ui/core';
+import Datatable from '../Datatable/Datatable.js';
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -10,6 +11,7 @@ const Home = () => {
     const [list, setList] = useState("")
     const [option, setOption] = useState([])
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
+    var data2=new Set();
 
     async function getList() {
         try {
@@ -44,7 +46,8 @@ const Home = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        data2 = new Set(data2).add(q)
+        console.log(data2);
         console.log(q);
     };
 
@@ -71,7 +74,7 @@ const Home = () => {
                     </Grid>
                 </Grid>
             </form>
-
+            <Datatable data={data}></Datatable>
         </Container>
     );
 };
