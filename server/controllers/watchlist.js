@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import Watchlist from '../models/watchlist.js';
+import Stock from '../models/stock.js';
 
 const router = express.Router();
 
@@ -9,10 +10,16 @@ export const getWatchlist = async (req, res) => {
 
     try {
         const watchlist = await Watchlist.findOne({ userid: req.userId });
-
-        res.status(200).json(watchlist);
+        var data = [];
+        //console.log(watchlist);
+        for (var i in watchlist.symbols) {
+            //console.log(watchlist.symbols[i]);
+            var ans = await Stock.findOne({ symbol: watchlist.symbols[i] })
+            data.push({ symbol: ans.symbol, name: ans.name, price: "" });
+        }
+        res.status(200).json(data);
     } catch (error) {
-        res.status(404).json({ message: error.message });
+        res.status(404).json({ message: error.message, why: "why you do this to me?" });
     }
 }
 

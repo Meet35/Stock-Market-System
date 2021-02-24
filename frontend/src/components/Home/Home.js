@@ -27,7 +27,6 @@ const Home = () => {
     const [info, setInfo] = useState([])
     const [list, setList] = useState([])
     const [price, setPrice] = useState(0)
-    const [final, setFinal] = useState([])
     const [option, setOption] = useState([])
     const [disable, setDisable] = useState(false)
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
@@ -36,8 +35,8 @@ const Home = () => {
     async function getList() {
         try {
             const { data } = await api.getWatchlist();
-            //console.log(data);
-            setList(data.symbols);
+            console.log(data);
+            setList(data);
         } catch (error) {
             console.log(error);
         }
@@ -53,7 +52,7 @@ const Home = () => {
         }
     }
 
-    useEffect(() => {
+    /*useEffect(() => {
         var dummy = [];
         for (var i in list) {
             for (var j in info) {
@@ -64,8 +63,8 @@ const Home = () => {
         }
         console.log(dummy);
         setFinal(dummy);
-    }, [list])
-    var interval;
+    }, [list])*/
+
 
     /*useEffect(() => {
         interval = setInterval(() => {
@@ -85,20 +84,30 @@ const Home = () => {
                 setInfo(data);
                 console.log(data);
                 setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
-                getList();
-                /*fetch("https://paper-api.alpaca.markets/v2/last/stocks/AAPL", {
-                    method: 'GET',
-                    mode: 'no-cors',
-                    headers: {
-                        'APCA-API-KEY-ID': 'PK3FXI9WQ3EZ3F70F0C1',
-                        'APCA-API-SECRET-KEY': 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435',
-                        Accept: 'application/json',
-                    },
-                }).then((response) => { console.log(response); return response.json(); })
-                    .then((data) => {
-                        console.log(data);
-                        setPrice(data.last.price);
-                    })*/
+                getList().then(() => {
+                    const interval = setInterval(() => {
+                        var pricess = [];
+                        Promise.all(list.map(item => {
+                            return new Promise((resolve) => {
+                                alpaca.lastTrade(item.symbol)
+                                    .then(response => {
+                                        return new Promise(() => {
+                                            pricess.push(response.last.price);
+                                            console.log(response);
+                                            resolve();
+                                        })
+                                    })
+                            })
+                        }))
+                        for (var i in pricess) {
+                            setList(list.map((item) => item.symbol == item.symbol ? { ...item, price: pricess[i] } : item));
+                        }
+                    }, 3000);
+                    return () => clearInterval(interval);
+                }).catch(() => {
+                    console.log("sometimes it happens");
+                });
+
             });
     }, [])
 
@@ -110,7 +119,7 @@ const Home = () => {
         console.log(data2);
         console.log(q);
         // clearInterval(interval);
-        if (final.length == 4) {
+        if (list.length == 4) {
             setDisable(true);
         }
     };
@@ -153,7 +162,7 @@ const Home = () => {
         }
         await getList();
         // clearInterval(interval);
-        if (final.length == 5) {
+        if (list.length == 5) {
             setDisable(false);
         }
     }
@@ -182,7 +191,7 @@ const Home = () => {
                 </Grid>
             </form>
             <hr />
-            {final.map(row =>
+            {list.map(row =>
                 <Box mb={1}>
                     <Card className={classes.root} variant="outlined">
                         <CardHeader
@@ -208,12 +217,7 @@ const Home = () => {
                                 {row.name}
                             </Typography>
                             <Typography variant="h6" component="h6">
-                                {setInterval(() => {
-                                    alpaca.lastTrade(row.symbol).then((response) => {
-                                        console.log(response);
-                                        setFinal(final.map(item => item.symbol == row.symbol ? { ...item, price: response.last.price } : item));
-                                    })
-                                }, 5000)}
+                                {row.price}
                             </Typography>
                         </CardContent>
                     </Card>
