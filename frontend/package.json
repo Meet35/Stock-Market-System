@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@alpacahq/alpaca-trade-api": "^1.4.2",
+    "@master-chief/alpaca": "^4.4.5",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",

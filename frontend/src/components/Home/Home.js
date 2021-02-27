@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as api from '../../api/index.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from '@material-ui/core';
-import Datatable from '../Datatable/Datatable.js';
+import { Button, Grid, Typography, Container, TextField } from '@material-ui/core';
+//import Datatable from '../Datatable/Datatable.js';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -10,33 +10,38 @@ import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Alpaca from '@alpacahq/alpaca-trade-api';
-const API_KEY = process.env.ALPACA_API_KEY;
-const API_SECRET = process.env.ALPACA_API_SECRET;
+import { AlpacaClient, AlpacaStream } from '@master-chief/alpaca'
+const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
+const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
 const USE_POLYGON = false;
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
-const alpaca = new Alpaca({
-    keyId: 'PK3FXI9WQ3EZ3F70F0C1',
-    secretKey: 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435',
-    paper: true,
-    usePolygon: USE_POLYGON
-});
+var whynotcount = [];
 
 const Home = () => {
     const [info, setInfo] = useState([])
     const [list, setList] = useState([])
-    const [price, setPrice] = useState(0)
     const [option, setOption] = useState([])
     const [disable, setDisable] = useState(false)
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
     var data2 = new Set();
-
+    var interval;
+    const client = new AlpacaClient({
+        credentials: {
+            key: API_KEY,
+            secret: API_SECRET,
+            // access_token: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+            paper: true,
+        },
+        rate_limit: true,
+    })
     async function getList() {
         try {
             const { data } = await api.getWatchlist();
             console.log(data);
             setList(data);
+            whynotcount = data;
         } catch (error) {
             console.log(error);
         }
@@ -77,6 +82,20 @@ const Home = () => {
         }, 5000);
     }, [final])*/
 
+    async function getPrice() {
+        try {
+            var pricess = [];
+            for (var i in whynotcount) {
+                var res = await client.getLastTrade({ symbol: whynotcount[i].symbol });
+                pricess.push({ symbol: whynotcount[i].symbol, name: whynotcount[i].name, price: res.last.price });
+            }
+            console.log(pricess);
+            setList(pricess);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         fetch("http://localhost:5000/stock")
             .then((response) => { return response.json(); })
@@ -85,40 +104,21 @@ const Home = () => {
                 console.log(data);
                 setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
                 getList().then(() => {
-                    const interval = setInterval(() => {
-                        var pricess = [];
-                        Promise.all(list.map(item => {
-                            return new Promise((resolve) => {
-                                alpaca.lastTrade(item.symbol)
-                                    .then(response => {
-                                        return new Promise(() => {
-                                            pricess.push(response.last.price);
-                                            console.log(response);
-                                            resolve();
-                                        })
-                                    })
-                            })
-                        }))
-                        for (var i in pricess) {
-                            setList(list.map((item) => item.symbol == item.symbol ? { ...item, price: pricess[i] } : item));
-                        }
-                    }, 3000);
-                    return () => clearInterval(interval);
+                    interval = setInterval(() => {
+                        getPrice();
+                    }, 5000);
                 }).catch(() => {
                     console.log("sometimes it happens");
                 });
 
             });
+        return () => clearInterval(interval);
     }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         await updating(q.symbol);
         await getList();
-        data2 = new Set(data2).add(q)
-        console.log(data2);
-        console.log(q);
-        // clearInterval(interval);
         if (list.length == 4) {
             setDisable(true);
         }
@@ -155,13 +155,10 @@ const Home = () => {
         e.preventDefault();
         try {
             const { data } = await api.updateWatchlist({ symbol });
-            //console.log(data);
-            //getList();
         } catch (error) {
             console.log(error);
         }
         await getList();
-        // clearInterval(interval);
         if (list.length == 5) {
             setDisable(false);
         }
@@ -191,7 +188,7 @@ const Home = () => {
                 </Grid>
             </form>
             <hr />
-            {list.map(row =>
+            {list.map((row, index) =>
                 <Box mb={1}>
                     <Card className={classes.root} variant="outlined">
                         <CardHeader
@@ -216,14 +213,13 @@ const Home = () => {
                             <Typography variant="h6" component="h6">
                                 {row.name}
                             </Typography>
-                            <Typography variant="h6" component="h6">
+                            <Typography variant="h6" component="h6" key={index}>
                                 {row.price}
                             </Typography>
                         </CardContent>
                     </Card>
                 </Box>
             )}
-            <h1>{price}</h1>
         </Container>
     );
 };
