@@ -23,3 +23,5 @@ export const signUp = (formData) => API.post('/user/signup', formData);
 
 export const getWatchlist = () => API.get(`/watchlist`);
 export const updateWatchlist = (symbol) => API.post(`/watchlist/update`, symbol);
+
+export const getPrice = (symbol) => API.get(`price/${symbol}`);

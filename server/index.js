@@ -6,6 +6,7 @@ import cors from 'cors';
 import userRouter from "./routes/user.js";
 import stockRouter from './routes/stock.js';
 import watchlistRouter from './routes/watchlist.js';
+import priceRouter from './routes/price.js';
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/stock", stockRouter);
 app.use("/user", userRouter);
 app.use("/watchlist", watchlistRouter);
+app.use("/price", priceRouter);
 
 const CONNECTION_URL = 'mongodb://localhost:27017/stockdb';
 const PORT = 5000;

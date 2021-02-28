@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import * as api from '../../api/index.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Button, Grid, Typography, Container, TextField } from '@material-ui/core';
@@ -106,13 +107,13 @@ const Home = () => {
                 getList().then(() => {
                     interval = setInterval(() => {
                         getPrice();
-                    }, 5000);
+                    }, 3000);
                 }).catch(() => {
                     console.log("sometimes it happens");
                 });
 
             });
-        return () => clearInterval(interval);
+        return () => { clearInterval(interval); };
     }, [])
 
     const handleSubmit = async (e) => {
@@ -217,6 +218,7 @@ const Home = () => {
                                 {row.price}
                             </Typography>
                         </CardContent>
+                        <Link to={{ pathname: `/view/${row.symbol}`, stste: { symbol: row.symbol, name: row.name } }} >View</Link>
                     </Card>
                 </Box>
             )}
