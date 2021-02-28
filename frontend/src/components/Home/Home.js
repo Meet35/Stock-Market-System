@@ -58,31 +58,6 @@ const Home = () => {
         }
     }
 
-    /*useEffect(() => {
-        var dummy = [];
-        for (var i in list) {
-            for (var j in info) {
-                if (list[i] === info[j].symbol) {
-                    dummy.push({ symbol: info[j].symbol, name: info[j].name, price: "" });
-                }
-            }
-        }
-        console.log(dummy);
-        setFinal(dummy);
-    }, [list])*/
-
-
-    /*useEffect(() => {
-        interval = setInterval(() => {
-            for (var i in final) {
-                alpaca.lastTrade(final[i].symbol).then((response) => {
-                    console.log(response);
-                    setFinal(final.map(item => item.symbol == final[i].symbol ? { ...item, price: response.last.price } : item));
-                })
-            }
-        }, 5000);
-    }, [final])*/
-
     async function getPrice() {
         try {
             var pricess = [];
