@@ -190,37 +190,38 @@ const Home = () => {
             </form>
             <hr />
             {list.map((row, index) =>
-                <Box mb={1}>
-                    <Card className={classes.root} variant="outlined">
-                        <CardHeader
-                            avatar={
-                                <Typography>
-                                    {row.symbol}
-                                </Typography>
-                            }
-                            action={
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    className={classes.button}
-                                    startIcon={<DeleteIcon />}
-                                    onClick={(e) => handleClick(row.symbol, e)}
-                                >
-                                    Delete
+                <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} >
+                    <Box mb={1}>
+                        <Card className={classes.root} variant="outlined">
+                            <CardHeader
+                                avatar={
+                                    <Typography>
+                                        {row.symbol}
+                                    </Typography>
+                                }
+                                action={
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        className={classes.button}
+                                        startIcon={<DeleteIcon />}
+                                        onClick={(e) => handleClick(row.symbol, e)}
+                                    >
+                                        Delete
                                 </Button>
-                            }
-                        />
-                        <CardContent>
-                            <Typography variant="h6" component="h6">
-                                {row.name}
-                            </Typography>
-                            <Typography variant="h6" component="h6" key={index}>
-                                {row.price}
-                            </Typography>
-                        </CardContent>
-                        <Link to={{ pathname: `/view/${row.symbol}`, stste: { symbol: row.symbol, name: row.name } }} >View</Link>
-                    </Card>
-                </Box>
+                                }
+                            />
+                            <CardContent>
+                                <Typography variant="h6" component="h6">
+                                    {row.name}
+                                </Typography>
+                                <Typography variant="h6" component="h6" key={index}>
+                                    {row.price}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Box>
+                </Link>
             )}
         </Container>
     );

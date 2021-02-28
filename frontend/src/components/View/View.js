@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Container } from '@material-ui/core';
+import { Typography, Container, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { AlpacaClient, AlpacaStream } from '@master-chief/alpaca'
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import ReactHighcharts from 'react-highcharts/ReactHighstock.src';
 import * as api from '../../api/index.js';
 import moment from 'moment';
+import avocado from 'highcharts/themes/sand-signika';
+import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
 const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
 const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
 const USE_POLYGON = false;
@@ -13,10 +15,19 @@ require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 //var ohlc = [], volume = [];
+avocado(ReactHighcharts.Highcharts);
+
+var groupingUnits = [[
+    'week',                         // unit name
+    [1]                             // allowed multiples
+], [
+    'month',
+    [1, 2, 3, 4, 6]
+]];
 
 const View = () => {
 
-    const [Stock, setStock] = useState('')
+    const [stock, setStock] = useState([])
     const [ohlc, setOhlc] = useState([]);
     const [volume, setVolume] = useState([]);
     let params = useParams();
@@ -34,13 +45,14 @@ const View = () => {
 
     useEffect(() => {
         const s = params.symbol;
-        setStock(s);
-        console.log(s);
+        const n = location.state;
+        setStock(n);
+        //console.log(n);
 
         api.getPrice(s)
             .then((data) => {
                 var priceData = data.data.data;
-                console.log(priceData);
+                //console.log(priceData);
                 var dummyOhlc = [], dummyVolume = [];
                 for (var i in priceData) {
                     dummyOhlc.push([
@@ -58,8 +70,8 @@ const View = () => {
                 }
                 setOhlc(dummyOhlc);
                 setVolume(dummyVolume);
-                console.log(dummyOhlc);
-                console.log(dummyVolume);
+                //console.log(dummyOhlc);
+                //console.log(dummyVolume);
             })
             .catch(err => console.log(err));
     }, [])
@@ -91,83 +103,72 @@ const View = () => {
     const classes = useStyles();
 
     const configPrice = {
+
+        rangeSelector: {
+            selected: 1
+        },
+
+        title: {
+            text: `${stock.symbol} - ${stock.name}`
+        },
+
         yAxis: [{
             labels: {
-                align: 'left'
+                align: 'right',
+                x: -3
             },
-            height: '80%',
+            title: {
+                text: 'OHLC'
+            },
+            height: '70%',
+            lineWidth: 2,
             resize: {
                 enabled: true
             }
         }, {
             labels: {
-                align: 'left'
+                align: 'right',
+                x: -3
             },
-            top: '80%',
-            height: '20%',
-            offset: 0
+            title: {
+                text: 'Volume'
+            },
+            top: '65%',
+            height: '35%',
+            offset: 0,
+            lineWidth: 2
         }],
+
         tooltip: {
-            shape: 'square',
-            headerShape: 'callout',
-            borderWidth: 0,
-            shadow: false,
-            positioner: function (width, height, point) {
-                var chart = this.chart,
-                    position;
-
-                if (point.isHeader) {
-                    position = {
-                        x: Math.max(
-                            // Left side limit
-                            chart.plotLeft,
-                            Math.min(
-                                point.plotX + chart.plotLeft - width / 2,
-                                // Right side limit
-                                chart.chartWidth - width - chart.marginRight
-                            )
-                        ),
-                        y: point.plotY
-                    };
-                } else {
-                    position = {
-                        x: point.series.chart.plotLeft,
-                        y: point.series.yAxis.top - chart.plotTop
-                    };
-                }
-
-                return position;
-            }
+            split: true
         },
+
         series: [{
-            type: 'ohlc',
-            id: `${Stock}-ohlc`,
-            name: `${Stock} Stock Price`,
-            data: ohlc
+            type: 'candlestick',
+            name: `${stock.symbol} Stock Price`,
+            data: ohlc,
+            dataGrouping: {
+                units: groupingUnits
+            }
         }, {
             type: 'column',
-            id: `${Stock}-volume`,
-            name: `${Stock} Volume`,
+            name: 'Volume',
             data: volume,
-            yAxis: 1
-        }],
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 800
-                },
-                chartOptions: {
-                    rangeSelector: {
-                        inputEnabled: false
-                    }
-                }
-            }]
-        }
+            yAxis: 1,
+            dataGrouping: {
+                units: groupingUnits
+            }
+        }]
     };
 
+    function handleClick(e) {
+        e.preventDefault();
+        history.goBack();
+    }
 
     return (
         <Container maxWidth="lg" >
+            <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button>
             <ReactHighcharts config={configPrice}></ReactHighcharts>
         </Container>
     );
