@@ -3,6 +3,6 @@ import { getStockinfo } from "../controllers/stockinfo.js";
 import auth from "../middleware/auth.js";
 const router = express.Router();
 
-router.get("/:symbol", getStockinfo);
+router.get("/:symbol", auth, getStockinfo);
 
 export default router;
