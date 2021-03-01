@@ -8,6 +8,18 @@ import * as api from '../../api/index.js';
 import moment from 'moment';
 import avocado from 'highcharts/themes/sand-signika';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
+import Toolbar from '@material-ui/core/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Box from '@material-ui/core/Box';
+import Tab from '@material-ui/core/Tab';
+import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+// import Typography from '@material-ui/core/Typography';
+import ButtonBase from '@material-ui/core/ButtonBase';
+
+
 const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
 const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
 const USE_POLYGON = false;
@@ -25,14 +37,67 @@ var groupingUnits = [[
     [1, 2, 3, 4, 6]
 ]];
 
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`full-width-tabpanel-${index}`}
+        aria-labelledby={`full-width-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box p={3}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+  
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+  };
+  
+  function a11yProps(index) {
+    return {
+      id: `full-width-tab-${index}`,
+      'aria-controls': `full-width-tabpanel-${index}`,
+    };
+  }
+  
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      backgroundColor: theme.palette.background.paper,
+      width: 500,
+    },
+  }));
+
 const View = () => {
+    
 
     const [stock, setStock] = useState([])
     const [ohlc, setOhlc] = useState([]);
     const [volume, setVolume] = useState([]);
+    const [data, setData] = useState([])
     let params = useParams();
     let location = useLocation();
     let history = useHistory();
+    const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+    
 
     const client = new AlpacaClient({
         credentials: {
@@ -167,10 +232,75 @@ const View = () => {
     }
 
     return (
-        <Container maxWidth="lg" >
-            <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button>
+        
+        <div className={classes.root}>
+        <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button>
+
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tab label="Chart"  />
+          <Tab label="Fundamental Data"  />
+          <Tab label="Master plan" disabled/>
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+      <Container maxWidth="lg" >
+            {/* <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button> */}
             <ReactHighcharts config={configPrice}></ReactHighcharts>
         </Container>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+      {/* <div className={classes.root}> */}
+      <Paper className={classes.paper}>
+        <Grid container spacing={2}>
+          <Grid item>
+            <ButtonBase className={classes.image}>
+              <img className={classes.img} alt="complex" src="/static/images/grid/complex.jpg" />
+            </ButtonBase>
+          </Grid>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
+                <Typography gutterBottom variant="subtitle1">
+                  Company Name
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                  CEO
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  Phone Number
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" style={{ cursor: 'pointer' }}>
+                  Extra
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Typography variant="subtitle1">$19.00</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+    {/* </div> */}
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Item Three
+      </TabPanel>
+    </div>
+    //     <Toolbar>
+    // <Button variant="outlined" color="inherit" >
+    //     Button 1
+    // </Button>
+    // <Button variant="outlined" color="inherit">
+    //     Button 2
+    // </Button>
+    // </Toolbar>
+        // <Container maxWidth="lg" >
+        //     <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button>
+        //     <ReactHighcharts config={configPrice}></ReactHighcharts>
+        // </Container>
     );
 };
 
