@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Container, Button, CardMedia, Avatar, Link } from '@material-ui/core';
+import { Typography, Container, Button, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import ReactHighcharts from 'react-highcharts/ReactHighstock.src';
 import * as api from '../../api/index.js';
 import avocado from 'highcharts/themes/sand-signika';
@@ -55,14 +55,14 @@ TabPanel.propTypes = {
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
-
+/*
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
     'aria-controls': `full-width-tabpanel-${index}`,
   };
 }
-
+*/
 const View = () => {
 
   const [stock, setStock] = useState([])
@@ -70,17 +70,16 @@ const View = () => {
   const [ohlc, setOhlc] = useState([]);
   const [volume, setVolume] = useState([]);
   let params = useParams();
-  let location = useLocation();
   let history = useHistory();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  /*
   const handleChangeIndex = (index) => {
     setValue(index);
-  };
+  };*/
 
   useEffect(() => {
     const s = params.symbol;
@@ -117,6 +116,7 @@ const View = () => {
         setVolume(dummyVolume);
       })
       .catch(err => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const useStyles = makeStyles((theme) => ({
@@ -257,7 +257,7 @@ const View = () => {
                     {stock.symbol} - {stock.name}
                   </Typography>
                   <Typography variant="body2" gutterBottom>
-                    {stock.ceo ? <p>Ceo : {stock.ceo}</p> : stock.ceo}
+                    {stock.ceo}
                   </Typography>
                   <Typography variant="body2" gutterBottom>
                     {stock.hq_address}

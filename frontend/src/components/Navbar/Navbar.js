@@ -33,6 +33,7 @@ const Navbar = () => {
         }
 
         setUser(JSON.parse(localStorage.getItem('profile')));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
     return (
@@ -49,8 +50,8 @@ const Navbar = () => {
                         <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>Logout</Button>
                     </div>
                 ) : (
-                        <Button component={Link} to="/auth" variant="contained" color="primary">Sign In</Button>
-                    )}
+                    <Button component={Link} to="/auth" variant="contained" color="primary">Sign In</Button>
+                )}
             </Toolbar>
         </AppBar>
     );

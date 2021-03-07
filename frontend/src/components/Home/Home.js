@@ -10,11 +10,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Alpaca from '@alpacahq/alpaca-trade-api';
-import { AlpacaClient, AlpacaStream } from '@master-chief/alpaca'
+import { AlpacaClient } from '@master-chief/alpaca'
 const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
 const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
-const USE_POLYGON = false;
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -23,10 +21,8 @@ var whynotcount = [];
 const Home = () => {
     const [info, setInfo] = useState([])
     const [list, setList] = useState([])
-    const [option, setOption] = useState([])
     const [disable, setDisable] = useState(false)
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
-    var data2 = new Set();
     var interval;
     const client = new AlpacaClient({
         credentials: {
@@ -50,6 +46,7 @@ const Home = () => {
 
     async function updating(symbol) {
         try {
+            // eslint-disable-next-line no-unused-vars
             const { data } = await api.updateWatchlist({ symbol });
             //console.log(data);
             //getList();
@@ -78,11 +75,12 @@ const Home = () => {
             .then((data) => {
                 setInfo(data);
                 console.log(data);
-                setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
+                //setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
                 getList().then(() => {
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
                     interval = setInterval(() => {
                         getPrice();
-                    }, 3000);
+                    }, 10000);
                 }).catch(() => {
                     console.log("sometimes it happens");
                 });
@@ -95,6 +93,7 @@ const Home = () => {
         e.preventDefault();
         await updating(q.symbol);
         await getList();
+        // eslint-disable-next-line eqeqeq
         if (list.length == 4) {
             setDisable(true);
         }
@@ -125,16 +124,17 @@ const Home = () => {
     });
 
     const classes = useStyles();
-    //const bull = <span className={classes.bullet}>•</span>;
 
     async function handleClick(symbol, e) {
         e.preventDefault();
         try {
+            // eslint-disable-next-line no-unused-vars
             const { data } = await api.updateWatchlist({ symbol });
         } catch (error) {
             console.log(error);
         }
         await getList();
+        // eslint-disable-next-line eqeqeq
         if (list.length == 5) {
             setDisable(false);
         }
@@ -149,6 +149,7 @@ const Home = () => {
                             id="combo-box-demo"
                             options={info}
                             getOptionLabel={(option) => option.symbol + " - " + option.name}
+                            getOptionSelected={(option, value) => option.symbol === value.symbol}
                             style={{ width: 600 }}
                             autoComplete
                             value={q}
@@ -165,8 +166,8 @@ const Home = () => {
             </form>
             <hr />
             {list.map((row, index) =>
-                <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} >
-                    <Box mb={1}>
+                <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} key={index} >
+                    <Box mb={1} key={index}>
                         <Card className={classes.root} variant="outlined">
                             <CardHeader
                                 avatar={
@@ -190,7 +191,7 @@ const Home = () => {
                                 <Typography variant="h6" component="h6">
                                     {row.name}
                                 </Typography>
-                                <Typography variant="h6" component="h6" key={index}>
+                                <Typography variant="h6" component="h6">
                                     {row.price}
                                 </Typography>
                             </CardContent>

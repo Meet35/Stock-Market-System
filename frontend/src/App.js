@@ -147,31 +147,39 @@ const App = () => {
 export default App;
 */
 
-
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import Auth from './components/Auth/Auth';
 import View from './components/View/View';
-//import { createRequire } from 'module';
-//const require = createRequire(import.meta.url);
-require('dotenv').config();
 
-const App = () => (
-
-  <BrowserRouter>
-    <Container maxWidth="lg">
-      <Navbar />
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/auth" exact component={Auth} />
-        <Route path="/view/:symbol" exact component={View} />
-      </Switch>
-    </Container>
-  </BrowserRouter>
-);
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Container maxWidth="lg">
+        <Navbar />
+        <Switch>
+          <Route exact path="/" render={() => (
+            localStorage.getItem('profile') ? (
+              <Home />
+            ) : (
+              <Redirect to="/auth" />
+            )
+          )} />
+          <Route path="/auth" exact component={Auth} />
+          <Route exact path="/view/:symbol" render={() => (
+            localStorage.getItem('profile') ? (
+              <View />
+            ) : (
+              <Redirect to="/auth" />
+            )
+          )} />
+        </Switch>
+      </Container>
+    </BrowserRouter>
+  )
+};
 
 export default App;
