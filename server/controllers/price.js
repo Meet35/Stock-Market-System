@@ -5,7 +5,7 @@ export const getPrice = async (req, res) => {
     const { symbol } = req.params;
 
     try {
-        const data = await Price.findOne({ symbol: symbol });
+        const data = await Price.find({ symbol: symbol }).sort({ date: 1 });
         //console.log(data);
         res.status(200).json(data);
     } catch (error) {

@@ -3,6 +3,6 @@ import { getPrice } from "../controllers/price.js";
 import auth from "../middleware/auth.js";
 const router = express.Router();
 
-router.get("/:symbol", auth, getPrice);
+router.get("/:symbol", getPrice);
 
 export default router;

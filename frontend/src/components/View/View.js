@@ -95,6 +95,7 @@ const View = () => {
 
     api.getPrice(s)
       .then((data) => {
+        /*
         var priceData = data.data.data;
         //console.log(priceData);
         var dummyOhlc = [], dummyVolume = [];
@@ -112,6 +113,24 @@ const View = () => {
             priceData[i].volume // the volume
           ]);
         }
+        */
+        var dummyOhlc = [], dummyVolume = [];
+        var priceData = data.data;
+        console.log(priceData);
+        for (var i in priceData) {
+          dummyOhlc.push([
+            priceData[i].date * 1000, // the date
+            priceData[i].open, // open
+            priceData[i].high, // high
+            priceData[i].low, // low
+            priceData[i].close // close
+          ]);
+          dummyVolume.push([
+            priceData[i].date * 1000, // the date
+            priceData[i].volume // the volume
+          ]);
+        }
+        console.log(dummyOhlc);
         setOhlc(dummyOhlc);
         setVolume(dummyVolume);
       })

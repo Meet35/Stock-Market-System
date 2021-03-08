@@ -80,7 +80,7 @@ const Home = () => {
                     // eslint-disable-next-line react-hooks/exhaustive-deps
                     interval = setInterval(() => {
                         getPrice();
-                    }, 10000);
+                    }, 3000);
                 }).catch(() => {
                     console.log("sometimes it happens");
                 });
