@@ -39,6 +39,9 @@ const Home = () => {
             console.log(data);
             setList(data);
             whynotcount = data;
+            if (whynotcount.length == 5) {
+                setDisable(true);
+            }
         } catch (error) {
             console.log(error);
         }

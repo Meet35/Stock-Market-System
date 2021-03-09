@@ -18,3 +18,5 @@ export const updateWatchlist = (symbol) => API.post(`/watchlist/update`, symbol)
 
 export const getPrice = (symbol) => API.get(`price/${symbol}`);
 export const getFundamental = (symbol) => API.get(`fundamental/${symbol}`);
+
+export const getStocksymbol = (symbol) => API.get(`stock/${symbol}`);

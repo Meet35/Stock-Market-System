@@ -68,7 +68,9 @@ const View = () => {
   const [stock, setStock] = useState([])
   const [similarstck, setSimilarstck] = useState([]);
   const [ohlc, setOhlc] = useState([]);
+  const [juststock, setJuststock] = useState([]);
   const [volume, setVolume] = useState([]);
+  const [iserror, setIserror] = useState(false);
   let params = useParams();
   let history = useHistory();
   const [value, setValue] = React.useState(0);
@@ -89,9 +91,18 @@ const View = () => {
       .then((data) => {
         console.log(data.data);
         setStock(data.data);
+        setJuststock({ symbol: data.data.symbol, name: data.data.name });
         setSimilarstck(data.data.similar);
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        api.getStocksymbol(s)
+          .then((data) => {
+            setJuststock({ symbol: data.data.symbol, name: data.data.name });
+          })
+          .catch(err => console.log(err));
+        setIserror(true);
+        console.log(err);
+      });
 
     api.getPrice(s)
       .then((data) => {
@@ -179,7 +190,7 @@ const View = () => {
     },
 
     title: {
-      text: `${stock.symbol} - ${stock.name}`
+      text: `${juststock.symbol} - ${juststock.name}`
     },
 
     yAxis: [{
@@ -215,7 +226,7 @@ const View = () => {
 
     series: [{
       type: 'candlestick',
-      name: `${stock.symbol} Stock Price`,
+      name: `${juststock.symbol} Stock Price`,
       data: ohlc,
       dataGrouping: {
         units: groupingUnits
@@ -263,72 +274,74 @@ const View = () => {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Paper className={classes.root} style={{ textTransform: "none" }}>
-          <Grid container spacing={3}>
-            <Grid item>
-              <ButtonBase className={classes.image}>
-                <img className={classes.img} alt="complex" src={stock.logo} />
-              </ButtonBase>
-            </Grid>
-            <Grid item xs={12} sm container>
-              <Grid item xs container direction="column" spacing={3}>
-                <Grid item xs>
-                  <Typography variant="h4" >
-                    {stock.symbol} - {stock.name}
+          {!iserror ?
+            <Grid container spacing={3}>
+              <Grid item>
+                <ButtonBase className={classes.image}>
+                  <img className={classes.img} alt="complex" src={stock.logo} />
+                </ButtonBase>
+              </Grid>
+              <Grid item xs={12} sm container>
+                <Grid item xs container direction="column" spacing={3}>
+                  <Grid item xs>
+                    <Typography variant="h4" >
+                      {stock.symbol} - {stock.name}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      {stock.ceo}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      {stock.hq_address}
+                    </Typography>
+                    <Typography variant="body2" gutterBottom>
+                      {stock.hq_state}, {stock.hq_country}
+                    </Typography>
+                    <Typography variant="body2">
+                      MarketCap : {stock.marketcap}$
                   </Typography>
-                  <Typography variant="body2" gutterBottom>
-                    {stock.ceo}
-                  </Typography>
-                  <Typography variant="body2" gutterBottom>
-                    {stock.hq_address}
-                  </Typography>
-                  <Typography variant="body2" gutterBottom>
-                    {stock.hq_state}, {stock.hq_country}
-                  </Typography>
-                  <Typography variant="body2">
-                    MarketCap : {stock.marketcap}$
-                  </Typography>
-                  <Typography variant="body2">
-                    Employees : {stock.employees}
-                  </Typography>
+                    <Typography variant="body2">
+                      Employees : {stock.employees}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography variant="body1" align="right">{stock.exchangeSymbol}</Typography>
+                  <Typography variant="body2" align="right">{stock.exchange}</Typography>
                 </Grid>
               </Grid>
+              <Grid item xs={12} container spacing={1}>
+                <Button variant="contained" size="small" style={{ color: '#fff', backgroundColor: '#6699ff', marginRight: '8px' }}>
+                  {stock.sector}
+                </Button>
+                <Button variant="contained" size="small" style={{ color: '#fff', backgroundColor: '#6699ff' }}>
+                  {stock.industry}
+                </Button>
+              </Grid>
               <Grid item>
-                <Typography variant="body1" align="right">{stock.exchangeSymbol}</Typography>
-                <Typography variant="body2" align="right">{stock.exchange}</Typography>
+                <Typography variant="body2" style={{ cursor: 'pointer' }}>
+                  {stock.description}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body2" style={{ cursor: 'pointer' }} paragraph>
+                  Listed from {stock.listdate}
+                </Typography>
+                <Link href={stock.url} variant="body2">
+                  {stock.url}
+                </Link>
+                <Typography variant="body2" style={{ cursor: 'pointer' }} paragraph>
+                  Similar :
+              </Typography>
+                {
+                  similarstck.map((item, index) =>
+                    <Button variant="contained" size="medium" onClick={(e) => gotoStock(item, e)} style={{ color: '#000', backgroundColor: '#ddff99', marginRight: '12px' }} key={index} >
+                      {item}
+                    </Button>
+                  )
+                }
               </Grid>
             </Grid>
-            <Grid item xs={12} container spacing={1}>
-              <Button variant="contained" size="small" style={{ color: '#fff', backgroundColor: '#6699ff', marginRight: '8px' }}>
-                {stock.sector}
-              </Button>
-              <Button variant="contained" size="small" style={{ color: '#fff', backgroundColor: '#6699ff' }}>
-                {stock.industry}
-              </Button>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2" style={{ cursor: 'pointer' }}>
-                {stock.description}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body2" style={{ cursor: 'pointer' }} paragraph>
-                Listed from {stock.listdate}
-              </Typography>
-              <Link href={stock.url} variant="body2">
-                {stock.url}
-              </Link>
-              <Typography variant="body2" style={{ cursor: 'pointer' }} paragraph>
-                Similar :
-              </Typography>
-              {
-                similarstck.map((item, index) =>
-                  <Button variant="contained" size="medium" onClick={(e) => gotoStock(item, e)} style={{ color: '#000', backgroundColor: '#ddff99', marginRight: '12px' }} key={index} >
-                    {item}
-                  </Button>
-                )
-              }
-            </Grid>
-          </Grid>
+            : <h2>Sorry, Don't have data...</h2>}
         </Paper>
       </TabPanel>
       <TabPanel value={value} index={2}>
