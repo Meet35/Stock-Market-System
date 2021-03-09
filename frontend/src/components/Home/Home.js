@@ -39,6 +39,7 @@ const Home = () => {
             console.log(data);
             setList(data);
             whynotcount = data;
+            // eslint-disable-next-line eqeqeq
             if (whynotcount.length == 5) {
                 setDisable(true);
             }
@@ -73,7 +74,7 @@ const Home = () => {
     }
 
     useEffect(() => {
-        fetch("http://localhost:5000/stock")
+        fetch("https://stock-market-system.herokuapp.com/stock")
             .then((response) => { return response.json(); })
             .then((data) => {
                 setInfo(data);

@@ -7,7 +7,7 @@ const schema = new mongoose.Schema(
             unique: true,
             required: true,
         },
-        data: { type: Number },
+        date: { type: Number },
         open: { type: Number },
         high: { type: Number },
         low: { type: Number },

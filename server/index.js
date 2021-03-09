@@ -8,6 +8,7 @@ import stockRouter from './routes/stock.js';
 import watchlistRouter from './routes/watchlist.js';
 import priceRouter from './routes/price.js';
 import stockinfoRouter from './routes/stockinfo.js';
+import { fetchData } from './script.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 require('dotenv').config();
@@ -24,10 +25,14 @@ app.use("/watchlist", watchlistRouter);
 app.use("/price", priceRouter);
 app.use("/fundamental", stockinfoRouter);
 
+app.get("/run", fetchData);
+app.get('/', (req, res) => {
+  res.send('Welcome to Schedule-job for fetching stocks');
+})
 //const CONNECTION_URL = 'mongodb://localhost:27017/stockdb';
 
 const CONNECTION_URL = process.env.DATABASE_URL;
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => app.listen(PORT, () => console.log(`Server Running on Port: http://localhost:${PORT}`)))

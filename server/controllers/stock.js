@@ -1,6 +1,5 @@
 import Stock from "../models/stock.js";
 
-
 export const getstocks = async (req, res) => {
     try {
         const data = await Stock.find().sort({ symbol: 1 });

@@ -1,9 +1,10 @@
 import Alpaca from '@alpacahq/alpaca-trade-api';
-const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
-const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
+import Stock from './models/stock.js';
+import Price from './models/price.js';
+
+const API_KEY = process.env.ALPACA_API_KEY;
+const API_SECRET = process.env.ALPACA_API_SECRET;
 const USE_POLYGON = false;
-import Stock from '../server/models/stock.js';
-import mongoose from 'mongoose';
 
 const alpaca = new Alpaca({
     keyId: API_KEY,
@@ -12,45 +13,73 @@ const alpaca = new Alpaca({
     usePolygon: USE_POLYGON
 });
 
-var data = [];
-
-alpaca.getAssets({
-    status: 'active',
-    asset_class: 'us_equity'
-}).then((res) => {
-    for (var i in res) {
-        var item = res[i];
-        var obj;
-        if (item.status == 'active' && item.tradable && item.easy_to_borrow) {
-            obj = { symbol: item.symbol, name: item.name, exchange: item.exchange }
-        }
-        data.push(obj);
-    }
-})
-
-const res = async (data) => {
+export const fetchData = async (req, res) => {
     try {
-        const result = await Stock.insertMany(data);
-        console.log(result.insertedCount);
-        return result.insertedCount;
+        const data = await Stock.find().sort({ symbol: 1 });
+        //console.log(data);
+        var symbols = [];
+        for (var i = 0; i < 200; i++) {
+            symbols.push(data[i].symbol);
+        }
+        var todayDate = new Date().toISOString().slice(0, 10);
+        //todayDate = "2021-03-08";
+        alpaca.getBars('1D', symbols, { limit: 1000, start: `${todayDate}T12:00:00-04:00`, end: `${todayDate}T22:00:00-04:00` })
+            .then(response => {
+                var dummy = [];
+                for (var i in symbols) {
+                    for (var bar in response[symbols[i]]) {
+                        dummy.push({ symbol: symbols[i], date: response[symbols[i]][bar].startEpochTime, open: response[symbols[i]][bar].openPrice, high: response[symbols[i]][bar].highPrice, low: response[symbols[i]][bar].lowPrice, close: response[symbols[i]][bar].closePrice, volume: response[symbols[i]][bar].volume });
+                    }
+                }
+                if (dummy.length > 0) {
+                    Price.insertMany(dummy)
+                        .then((res) => console.log("suc1"))
+                        .catch(err => console.log(err));
+                }
+            })
+            .catch(err => console.log(err));
+
+        var data1 = [];
+        for (var i = 200; i < 400; i++) {
+            data1.push(data[i].symbol);
+        }
+        alpaca.getBars('1D', data1, { limit: 1000, start: `${todayDate}T12:00:00-04:00`, end: `${todayDate}T22:00:00-04:00` })
+            .then(response => {
+                var dummy = [];
+                for (var i in data1) {
+                    for (var bar in response[data1[i]]) {
+                        dummy.push({ symbol: data1[i], date: response[data1[i]][bar].startEpochTime, open: response[data1[i]][bar].openPrice, high: response[data1[i]][bar].highPrice, low: response[data1[i]][bar].lowPrice, close: response[data1[i]][bar].closePrice, volume: response[data1[i]][bar].volume });
+                    }
+                }
+                if (dummy.length > 0) {
+                    Price.insertMany(dummy)
+                        .then((res) => console.log("suc2"))
+                        .catch(err => console.log(err));
+                }
+            })
+            .catch(err => console.log(err));
+
+        var data2 = [];
+        for (var i = 400; i < 503; i++) {
+            data2.push(data[i].symbol);
+        }
+        alpaca.getBars('1D', data2, { limit: 1000, start: `${todayDate}T12:00:00-04:00`, end: `${todayDate}T22:00:00-04:00` })
+            .then(response => {
+                var dummy = [];
+                for (var i in data2) {
+                    for (var bar in response[data2[i]]) {
+                        dummy.push({ symbol: data2[i], date: response[data2[i]][bar].startEpochTime, open: response[data2[i]][bar].openPrice, high: response[data2[i]][bar].highPrice, low: response[data2[i]][bar].lowPrice, close: response[data2[i]][bar].closePrice, volume: response[data2[i]][bar].volume });
+                    }
+                }
+                if (dummy.length > 0) {
+                    Price.insertMany(dummy)
+                        .then((res) => console.log("suc3"))
+                        .catch(err => console.log(err));
+                }
+            })
+            .catch(err => console.log(err));
+        res.status(200).json({ message: "successsssss" });
     } catch (error) {
-        console.log(error);
-        return "error";
+        res.status(500).send({ message: error.message || "Error Occured" });
     }
-}
-
-console.log(res);
-
-var MongoClient = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017/";
-
-MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    var dbo = db.db("mydb");
-    var myobj = { name: "Company Inc", address: "Highway 37" };
-    dbo.collection("stock").insertOne(myobj, function (err, res) {
-        if (err) throw err;
-        console.log("1 document inserted");
-        db.close();
-    });
-});
+};
