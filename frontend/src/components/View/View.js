@@ -2,9 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Container, Button, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
-import ReactHighcharts from 'react-highcharts/ReactHighstock.src';
+
+import 'highcharts/css/stocktools/gui.css';
+import 'highcharts/css/annotations/popup.css';
+import Highcharts from "highcharts/highstock";
+import HighchartsReact from "highcharts-react-official";
+import Data from 'highcharts/modules/data';
+import Indicators from "highcharts/indicators/indicators-all.js";
+import DragPanes from "highcharts/modules/drag-panes.js";
+import AnnotationsAdvanced from "highcharts/modules/annotations-advanced.js";
+import PriceIndicator from "highcharts/modules/price-indicator.js";
+import FullScreen from "highcharts/modules/full-screen.js";
+import StockTools from "highcharts/modules/stock-tools.js";
+import exporting from 'highcharts/modules/exporting';
+import exporData from 'highcharts/modules/export-data';
+import offlineExporting from 'highcharts/modules/offline-exporting';
+import theme from 'highcharts/themes/sunset';
+
 import * as api from '../../api/index.js';
-import avocado from 'highcharts/themes/sand-signika';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -13,14 +28,23 @@ import Tab from '@material-ui/core/Tab';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-// import Typography from '@material-ui/core/Typography';
 import ButtonBase from '@material-ui/core/ButtonBase';
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 //var ohlc = [], volume = [];
-avocado(ReactHighcharts.Highcharts);
-
+offlineExporting(Highcharts);
+exporting(Highcharts);
+exporData(Highcharts);
+Data(Highcharts);
+Indicators(Highcharts);
+DragPanes(Highcharts);
+AnnotationsAdvanced(Highcharts);
+PriceIndicator(Highcharts);
+FullScreen(Highcharts);
+StockTools(Highcharts);
+theme(Highcharts);
+// eslint-disable-next-line no-unused-vars
 var groupingUnits = [[
   'week',                         // unit name
   [1]                             // allowed multiples
@@ -118,7 +142,6 @@ const View = () => {
             priceData[i].low, // low
             priceData[i].close // close
           ]);
-
           dummyVolume.push([
             Date.parse(priceData[i].date), // the date
             priceData[i].volume // the volume
@@ -179,67 +202,94 @@ const View = () => {
       width: theme.spacing(30),
       height: theme.spacing(3),
     },
+    itsTrue: {
+      height: '300px',
+    },
   }));
 
   const classes = useStyles();
 
   const configPrice = {
-
-    rangeSelector: {
-      selected: 1
-    },
-
     title: {
-      text: `${juststock.symbol} - ${juststock.name}`
+      text: `${juststock.symbol} - ${juststock.name}`,
+      style: { "color": "#001433", "fontSize": "25px" },
     },
-
+    chart: {
+      height: (9 / 16 * 100 + 6) + '%',
+    },
     yAxis: [{
       labels: {
-        align: 'right',
-        x: -3
+        align: 'left'
       },
-      title: {
-        text: 'OHLC'
-      },
-      height: '70%',
-      lineWidth: 2,
+      height: '80%',
       resize: {
         enabled: true
       }
     }, {
       labels: {
-        align: 'right',
-        x: -3
+        align: 'left'
       },
-      title: {
-        text: 'Volume'
-      },
-      top: '65%',
-      height: '35%',
-      offset: 0,
-      lineWidth: 2
+      top: '80%',
+      height: '20%',
+      offset: 0
     }],
-
     tooltip: {
-      split: true
+      shape: 'square',
+      headerShape: 'callout',
+      borderWidth: 0,
+      shadow: false,
+      positioner: function (width, height, point) {
+        var chart = this.chart,
+          position;
+
+        if (point.isHeader) {
+          position = {
+            x: Math.max(
+              // Left side limit
+              chart.plotLeft,
+              Math.min(
+                point.plotX + chart.plotLeft - width / 2,
+                // Right side limit
+                chart.chartWidth - width - chart.marginRight
+              )
+            ),
+            y: point.plotY
+          };
+        } else {
+          position = {
+            x: point.series.chart.plotLeft,
+            y: point.series.yAxis.top - chart.plotTop
+          };
+        }
+
+        return position;
+      }
     },
 
     series: [{
-      type: 'candlestick',
+      type: 'ohlc',
+      id: `${juststock.symbol}-ohlc`,
       name: `${juststock.symbol} Stock Price`,
-      data: ohlc,
-      dataGrouping: {
-        units: groupingUnits
-      }
+      data: ohlc
     }, {
       type: 'column',
-      name: 'Volume',
+      id: `${juststock.symbol}-volume`,
+      name: `${juststock.symbol} Volume`,
       data: volume,
-      yAxis: 1,
-      dataGrouping: {
-        units: groupingUnits
-      }
-    }]
+      yAxis: 1
+    }],
+    responsive: {
+      rules: [{
+        condition: {
+          maxWidth: 800
+        },
+        chartOptions: {
+          rangeSelector: {
+            inputEnabled: false
+          }
+        }
+      }]
+    }
   };
 
   function handleClick(e) {
@@ -267,9 +317,13 @@ const View = () => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <Container maxWidth="lg" >
+        <Container maxWidth="lg" className={classes.itsTrue}>
           {/* <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button> */}
-          <ReactHighcharts config={configPrice}></ReactHighcharts>
+          <HighchartsReact
+            highcharts={Highcharts}
+            constructorType={"stockChart"}
+            options={configPrice}
+          />
         </Container>
       </TabPanel>
       <TabPanel value={value} index={1}>

@@ -16,6 +16,8 @@
     "bootstrap": "^4.6.0",
     "es6-promise": "^4.2.8",
     "fetch-readablestream": "^0.2.0",
+    "highcharts": "^9.0.1",
+    "highcharts-react-official": "^3.0.0",
     "isomorphic-fetch": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.1",
