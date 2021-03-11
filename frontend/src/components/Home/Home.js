@@ -164,7 +164,10 @@ const Home = () => {
                         />
                     </Grid>
                     <Grid item xs>
+                       <Box display="flex" justifyContent="space-between">
                         <Button disabled={disable} variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button>
+                        <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Show all Triggers</Button>
+                        </Box>
                     </Grid>
                 </Grid>
             </form>

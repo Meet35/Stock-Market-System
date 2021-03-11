@@ -29,6 +29,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import TextField from '@material-ui/core/TextField';
 require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
@@ -314,6 +315,7 @@ const View = () => {
           <Tab label="Chart" />
           <Tab label="Fundamental Data" />
           <Tab label="Real Time" />
+          <Tab label="Add Triger"/>
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -400,6 +402,15 @@ const View = () => {
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+      <form className={classes.root} noValidate autoComplete="off">
+        Add Value : <TextField label="" />
+        <br/>
+        <br/>
+
+        <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 100 }}> Add </Button>
+      </form>
       </TabPanel>
     </Container>
   );
