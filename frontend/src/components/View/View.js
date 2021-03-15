@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Typography, Container, Button, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory, useParams } from 'react-router-dom';
@@ -18,6 +18,8 @@ import exporting from 'highcharts/modules/exporting';
 import exporData from 'highcharts/modules/export-data';
 import offlineExporting from 'highcharts/modules/offline-exporting';
 import theme from 'highcharts/themes/sunset';
+//import Helmet from 'react-helmet';
+import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 
 import * as api from '../../api/index.js';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
@@ -99,7 +101,20 @@ const View = () => {
   let params = useParams();
   let history = useHistory();
   const [value, setValue] = React.useState(0);
-
+  const firstRef = useRef(null);
+  const script = document.createElement('script');
+  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js'
+  script.async = true;
+  script.innerHTML = JSON.stringify({
+    "symbol": "NASDAQ:AAPL",
+    "colorTheme": "light",
+    "isTransparent": false,
+    "largeChartUrl": "",
+    "displayMode": "regular",
+    "width": 480,
+    "height": 830,
+    "locale": "in"
+  });
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -131,24 +146,7 @@ const View = () => {
 
     api.getPrice(s)
       .then((data) => {
-        /*
-        var priceData = data.data.data;
-        //console.log(priceData);
-        var dummyOhlc = [], dummyVolume = [];
-        for (var i in priceData) {
-          dummyOhlc.push([
-            Date.parse(priceData[i].date), // the date
-            priceData[i].open, // open
-            priceData[i].high, // high
-            priceData[i].low, // low
-            priceData[i].close // close
-          ]);
-          dummyVolume.push([
-            Date.parse(priceData[i].date), // the date
-            priceData[i].volume // the volume
-          ]);
-        }
-        */
+
         var dummyOhlc = [], dummyVolume = [];
         var priceData = data.data;
         console.log(priceData);
@@ -170,6 +168,10 @@ const View = () => {
         setVolume(dummyVolume);
       })
       .catch(err => console.log(err));
+
+    //firstRef.current.appendChild(script);
+
+    //document.getElementById("myContainer").appendChild(script);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -315,7 +317,7 @@ const View = () => {
           <Tab label="Chart" />
           <Tab label="Fundamental Data" />
           <Tab label="Real Time" />
-          <Tab label="Add Triger"/>
+          <Tab label="Add Triger" />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -326,6 +328,8 @@ const View = () => {
             constructorType={"stockChart"}
             options={configPrice}
           />
+          {/*  <div ref={firstRef}>
+          </div>*/}
         </Container>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -401,16 +405,16 @@ const View = () => {
         </Paper>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
+        working on it
       </TabPanel>
       <TabPanel value={value} index={3}>
-      <form className={classes.root} noValidate autoComplete="off">
-        Add Value : <TextField label="" />
-        <br/>
-        <br/>
+        <form className={classes.root} noValidate autoComplete="off">
+          Add Value : <TextField label="" />
+          <br />
+          <br />
 
-        <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 100 }}> Add </Button>
-      </form>
+          <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 100 }}> Add </Button>
+        </form>
       </TabPanel>
     </Container>
   );

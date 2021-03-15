@@ -7,8 +7,10 @@ import userRouter from "./routes/user.js";
 import stockRouter from './routes/stock.js';
 import watchlistRouter from './routes/watchlist.js';
 import priceRouter from './routes/price.js';
+import livepriceRouter from './routes/liveprice.js';
 import stockinfoRouter from './routes/stockinfo.js';
 import { fetchData } from './script.js';
+import { fetchLivedata } from './livescript.js';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 require('dotenv').config();
@@ -23,9 +25,11 @@ app.use("/stock", stockRouter);
 app.use("/user", userRouter);
 app.use("/watchlist", watchlistRouter);
 app.use("/price", priceRouter);
+app.use("/liveprice", livepriceRouter);
 app.use("/fundamental", stockinfoRouter);
 
 app.get("/run", fetchData);
+app.get("/liverun", fetchLivedata);
 app.get('/', (req, res) => {
   res.send('Welcome to Schedule-job for fetching stocks');
 })
