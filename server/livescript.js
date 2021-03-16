@@ -23,10 +23,14 @@ export const fetchLivedata = async (req, res) => {
         var todayDate = new Date().toISOString().slice(0, 10);
         alpaca.getBars('1Min', symbols, { limit: 1000, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
             .then(response => {
+                //console.log(response);
                 var dummy = [];
                 for (var i in symbols) {
                     var len = response[symbols[i]].length;
-                    dummy.push({ symbol: symbols[i], date: response[symbols[i]][len - 1].startEpochTime, open: response[symbols[i]][len - 1].openPrice, high: response[symbols[i]][len - 1].highPrice, low: response[symbols[i]][len - 1].lowPrice, close: response[symbols[i]][len - 1].closePrice, volume: response[symbols[i]][len - 1].volume });
+                    if (len == 0)
+                        console.log(symbols[i]);
+                    if (len > 0)
+                        dummy.push({ symbol: symbols[i], date: response[symbols[i]][len - 1].startEpochTime, open: response[symbols[i]][len - 1].openPrice, high: response[symbols[i]][len - 1].highPrice, low: response[symbols[i]][len - 1].lowPrice, close: response[symbols[i]][len - 1].closePrice, volume: response[symbols[i]][len - 1].volume });
                 }
                 if (dummy.length > 0) {
                     Liveprice.insertMany(dummy)
@@ -45,7 +49,10 @@ export const fetchLivedata = async (req, res) => {
                 var dummy = [];
                 for (var i in data1) {
                     var len = response[data1[i]].length;
-                    dummy.push({ symbol: data1[i], date: response[data1[i]][len - 1].startEpochTime, open: response[data1[i]][len - 1].openPrice, high: response[data1[i]][len - 1].highPrice, low: response[data1[i]][len - 1].lowPrice, close: response[data1[i]][len - 1].closePrice, volume: response[data1[i]][len - 1].volume });
+                    if (len == 0)
+                        console.log(symbols[i]);
+                    if (len > 0)
+                        dummy.push({ symbol: data1[i], date: response[data1[i]][len - 1].startEpochTime, open: response[data1[i]][len - 1].openPrice, high: response[data1[i]][len - 1].highPrice, low: response[data1[i]][len - 1].lowPrice, close: response[data1[i]][len - 1].closePrice, volume: response[data1[i]][len - 1].volume });
                 }
                 if (dummy.length > 0) {
                     Liveprice.insertMany(dummy)
@@ -64,7 +71,10 @@ export const fetchLivedata = async (req, res) => {
                 var dummy = [];
                 for (var i in data2) {
                     var len = response[data2[i]].length;
-                    dummy.push({ symbol: data2[i], date: response[data2[i]][len - 1].startEpochTime, open: response[data2[i]][len - 1].openPrice, high: response[data2[i]][len - 1].highPrice, low: response[data2[i]][len - 1].lowPrice, close: response[data2[i]][len - 1].closePrice, volume: response[data2[i]][len - 1].volume });
+                    if (len == 0)
+                        console.log(symbols[i]);
+                    if (len > 0)
+                        dummy.push({ symbol: data2[i], date: response[data2[i]][len - 1].startEpochTime, open: response[data2[i]][len - 1].openPrice, high: response[data2[i]][len - 1].highPrice, low: response[data2[i]][len - 1].lowPrice, close: response[data2[i]][len - 1].closePrice, volume: response[data2[i]][len - 1].volume });
                 }
                 if (dummy.length > 0) {
                     Liveprice.insertMany(dummy)

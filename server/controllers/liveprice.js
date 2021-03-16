@@ -1,4 +1,4 @@
-import Liveprice from "../models/price.js";
+import Liveprice from "../models/liveprice.js";
 
 export const getPrice = async (req, res) => {
 

@@ -18,8 +18,9 @@ import exporting from 'highcharts/modules/exporting';
 import exporData from 'highcharts/modules/export-data';
 import offlineExporting from 'highcharts/modules/offline-exporting';
 import theme from 'highcharts/themes/sunset';
+import HC_more from "highcharts/highcharts-more";
 //import Helmet from 'react-helmet';
-import TradingViewWidget, { Themes } from 'react-tradingview-widget';
+//import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 
 import * as api from '../../api/index.js';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
@@ -36,6 +37,7 @@ require("es6-promise").polyfill();
 require("isomorphic-fetch");
 
 //var ohlc = [], volume = [];
+HC_more(Highcharts);
 offlineExporting(Highcharts);
 exporting(Highcharts);
 exporData(Highcharts);
@@ -95,26 +97,16 @@ const View = () => {
   const [stock, setStock] = useState([])
   const [similarstck, setSimilarstck] = useState([]);
   const [ohlc, setOhlc] = useState([]);
+  const [candlepricedata, setCandlepricedata] = useState([]);
+  const [candlevolumedata, setCandlevolumedata] = useState([]);
   const [juststock, setJuststock] = useState([]);
   const [volume, setVolume] = useState([]);
   const [iserror, setIserror] = useState(false);
   let params = useParams();
+  var chartComponent = useRef(null);
   let history = useHistory();
   const [value, setValue] = React.useState(0);
-  const firstRef = useRef(null);
-  const script = document.createElement('script');
-  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js'
-  script.async = true;
-  script.innerHTML = JSON.stringify({
-    "symbol": "NASDAQ:AAPL",
-    "colorTheme": "light",
-    "isTransparent": false,
-    "largeChartUrl": "",
-    "displayMode": "regular",
-    "width": 480,
-    "height": 830,
-    "locale": "in"
-  });
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -122,7 +114,6 @@ const View = () => {
   const handleChangeIndex = (index) => {
     setValue(index);
   };*/
-
   useEffect(() => {
     const s = params.symbol;
     //const n = location.state;
@@ -169,9 +160,52 @@ const View = () => {
       })
       .catch(err => console.log(err));
 
-    //firstRef.current.appendChild(script);
+    api.getLiveprice(s)
+      .then(data => {
+        var priceData = data.data;
+        console.log(priceData);
+        var dummyCandleprice = [], dummyCandlevolume = [];
+        for (var i in priceData) {
+          dummyCandleprice.push([
+            priceData[i].date * 1000, // the date
+            priceData[i].open, // open
+            priceData[i].high, // high
+            priceData[i].low, // low
+            priceData[i].close // close
+          ]);
+          dummyCandlevolume.push([
+            priceData[i].date * 1000, // the date
+            priceData[i].volume // volume
+          ]);
+        }
+        console.log(dummyCandleprice);
+        setCandlepricedata(dummyCandleprice);
+        setCandlevolumedata(dummyCandlevolume);
+      })
+      .catch(err => console.log(err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    /*interval = setInterval(() => {
+      api.getLiveprice(s)
+        .then(data => {
+          var priceData = data.data;
+          console.log(priceData);
+          var dummyCandle = [];
+          for (var i in priceData) {
+            dummyCandle.push([
+              priceData[i].date * 1000, // the date
+              priceData[i].open, // open
+              priceData[i].high, // high
+              priceData[i].low, // low
+              priceData[i].close // close
+            ]);
+          }
+          console.log(dummyCandle);
+          setCandledata(dummyCandle);
+        })
+        .catch(err => console.log(err));
+    }, 60000);
 
-    //document.getElementById("myContainer").appendChild(script);
+    return () => { clearInterval(interval); };*/
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -211,6 +245,137 @@ const View = () => {
   }));
 
   const classes = useStyles();
+
+  const configLiveprice = {
+    chart: {
+      height: (9 / 16 * 100 + 6) + '%',
+      events: {
+        load: function () {
+          setInterval(function () {
+            api.getLiveprice(params.symbol)
+              .then(data => {
+                var dummyprice = data.data;
+                console.log(dummyprice);
+                var len = dummyprice.length;
+                var d = dummyprice[len - 1].date * 1000;
+                var o = dummyprice[len - 1].open;
+                var h = dummyprice[len - 1].high;
+                var l = dummyprice[len - 1].low;
+                var c = dummyprice[len - 1].close;
+                var v = dummyprice[len - 1].volume;
+                chartComponent.current.chart.series[0].addPoint([d, o, h, l, c], true, true);
+                chartComponent.current.chart.series[1].addPoint([d, v], true, true);
+              })
+              .catch(err => console.log(err));
+          }, 60000);
+        }
+      }
+    },
+
+    title: {
+      text: `${juststock.symbol} - ${juststock.name} Live Price`,
+      style: { "color": "#001433", "fontSize": "21px" },
+    },
+
+    yAxis: [{
+      labels: {
+        align: 'left'
+      },
+      height: '80%',
+      resize: {
+        enabled: true
+      }
+    }, {
+      labels: {
+        align: 'left'
+      },
+      top: '80%',
+      height: '20%',
+      offset: 0
+    }],
+    tooltip: {
+      shape: 'square',
+      headerShape: 'callout',
+      borderWidth: 0,
+      shadow: false,
+      positioner: function (width, height, point) {
+        var chart = this.chart,
+          position;
+
+        if (point.isHeader) {
+          position = {
+            x: Math.max(
+              // Left side limit
+              chart.plotLeft,
+              Math.min(
+                point.plotX + chart.plotLeft - width / 2,
+                // Right side limit
+                chart.chartWidth - width - chart.marginRight
+              )
+            ),
+            y: point.plotY
+          };
+        } else {
+          position = {
+            x: point.series.chart.plotLeft,
+            y: point.series.yAxis.top - chart.plotTop
+          };
+        }
+        return position;
+      }
+    },
+
+    rangeSelector: {
+      buttons: [{
+        type: 'minute',
+        count: 15,
+        text: '15m'
+      }, {
+        type: 'hour',
+        count: 1,
+        text: '1h'
+      }, {
+        type: 'hour',
+        count: 3,
+        text: '3h'
+      }, {
+        type: 'all',
+        count: 1,
+        text: 'All'
+      }],
+      selected: 1,
+      inputEnabled: false
+    },
+
+    series: [{
+      id: `${juststock.symbol}-candlestick`,
+      name: `${juststock.symbol} - Stock Price`,
+      type: 'candlestick',
+      data: candlepricedata,
+      tooltip: {
+        valueDecimals: 2
+      }
+    }, {
+      type: 'column',
+      id: `${juststock.symbol}-volume`,
+      name: `${juststock.symbol} Volume`,
+      data: candlevolumedata,
+      yAxis: 1
+    }],
+
+    responsive: {
+      rules: [{
+        condition: {
+          maxWidth: 800
+        },
+        chartOptions: {
+          rangeSelector: {
+            inputEnabled: false
+          }
+        }
+      }]
+    }
+  };
 
   const configPrice = {
     title: {
@@ -264,13 +429,12 @@ const View = () => {
             y: point.series.yAxis.top - chart.plotTop
           };
         }
-
         return position;
       }
     },
 
     series: [{
-      type: 'ohlc',
+      type: 'candlestick',
       id: `${juststock.symbol}-ohlc`,
       name: `${juststock.symbol} Stock Price`,
       data: ohlc
@@ -281,6 +445,7 @@ const View = () => {
       data: volume,
       yAxis: 1
     }],
+
     responsive: {
       rules: [{
         condition: {
@@ -328,8 +493,6 @@ const View = () => {
             constructorType={"stockChart"}
             options={configPrice}
           />
-          {/*  <div ref={firstRef}>
-          </div>*/}
         </Container>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -405,7 +568,15 @@ const View = () => {
         </Paper>
       </TabPanel>
       <TabPanel value={value} index={2}>
-        working on it
+        <Container maxWidth="lg" className={classes.itsTrue}>
+          {/* <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundColor="gray">Back</Button> */}
+          <HighchartsReact
+            highcharts={Highcharts}
+            ref={chartComponent}
+            constructorType={"stockChart"}
+            options={configLiveprice}
+          />
+        </Container>
       </TabPanel>
       <TabPanel value={value} index={3}>
         <form className={classes.root} noValidate autoComplete="off">
