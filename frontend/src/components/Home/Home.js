@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as api from '../../api/index.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Button, Grid, Typography, Container, TextField } from '@material-ui/core';
@@ -23,6 +23,7 @@ const Home = () => {
     const [list, setList] = useState([])
     const [disable, setDisable] = useState(false)
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
+    let history = useHistory();
     var interval;
     const client = new AlpacaClient({
         credentials: {
@@ -144,6 +145,12 @@ const Home = () => {
         }
     }
 
+    const showTriggers = async (e) => {
+        e.preventDefault();
+        history.push(`/triggers`);
+        window.location.reload();
+    }
+
     return (
         <Container maxWidth="lg" >
             <form onSubmit={handleSubmit}>
@@ -164,9 +171,9 @@ const Home = () => {
                         />
                     </Grid>
                     <Grid item xs>
-                       <Box display="flex" justifyContent="space-between">
-                        <Button disabled={disable} variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button>
-                        <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Show all Triggers</Button>
+                        <Box display="flex" justifyContent="space-between">
+                            <Button disabled={disable} variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button>
+                            <Button variant="contained" onClick={showTriggers} color="secondary" size="large" style={{ width: 260 }}>Show all Triggers</Button>
                         </Box>
                     </Grid>
                 </Grid>

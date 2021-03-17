@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://stock-market-system.herokuapp.com' });
+const API = axios.create({ baseURL: 'https://stock-market-system.herokuapp.com/' });
 
 API.interceptors.request.use((req) => {
     if (localStorage.getItem('profile')) {
@@ -21,3 +21,7 @@ export const getLiveprice = (symbol) => API.get(`liveprice/${symbol}`);
 export const getFundamental = (symbol) => API.get(`fundamental/${symbol}`);
 
 export const getStocksymbol = (symbol) => API.get(`stock/${symbol}`);
+
+export const getTrigger = () => API.get(`/trigger`);
+export const deleteTrigger = (id) => API.delete(`/trigger/${id}`);
+export const createTrigger = (triggerData) => API.post(`/trigger`, triggerData);

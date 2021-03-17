@@ -47,8 +47,6 @@ export const updateWatchlist = async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-
-
 }
 
 export default router;

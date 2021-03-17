@@ -9,6 +9,7 @@ import watchlistRouter from './routes/watchlist.js';
 import priceRouter from './routes/price.js';
 import livepriceRouter from './routes/liveprice.js';
 import stockinfoRouter from './routes/stockinfo.js';
+import triggerRouter from './routes/trigger.js';
 import { fetchData } from './script.js';
 import { fetchLivedata } from './livescript.js';
 import { removeData } from './initialscript.js';
@@ -28,6 +29,7 @@ app.use("/watchlist", watchlistRouter);
 app.use("/price", priceRouter);
 app.use("/liveprice", livepriceRouter);
 app.use("/fundamental", stockinfoRouter);
+app.use("/trigger", triggerRouter);
 
 app.get("/run", fetchData);
 app.get("/liverun", fetchLivedata);

@@ -154,6 +154,7 @@ import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
 import Auth from './components/Auth/Auth';
 import View from './components/View/View';
+import DataTrigger from './components/DataTrigger/DataTrigger';
 
 const App = () => {
   return (
@@ -169,6 +170,13 @@ const App = () => {
             )
           )} />
           <Route path="/auth" exact component={Auth} />
+          <Route exact path="/triggers" render={() => (
+            localStorage.getItem('profile') ? (
+              <DataTrigger />
+            ) : (
+              <Redirect to="/auth" />
+            )
+          )} />
           <Route exact path="/view/:symbol" render={() => (
             localStorage.getItem('profile') ? (
               <View />

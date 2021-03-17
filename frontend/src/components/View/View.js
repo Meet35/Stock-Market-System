@@ -19,6 +19,8 @@ import exporData from 'highcharts/modules/export-data';
 import offlineExporting from 'highcharts/modules/offline-exporting';
 import theme from 'highcharts/themes/sunset';
 import HC_more from "highcharts/highcharts-more";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 //import Helmet from 'react-helmet';
 //import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 
@@ -106,6 +108,12 @@ const View = () => {
   var chartComponent = useRef(null);
   let history = useHistory();
   const [value, setValue] = React.useState(0);
+  const [currentprice, setCurrentprice] = useState(0);
+  const [upperlimit, setUpperlimit] = useState(0);
+  const [lowerlimit, setLowerlimit] = useState(0);
+  const [isuppererror, setIsuppererror] = useState(false);
+  const [islowererror, setIslowererror] = useState(false);
+  const [email, setEmail] = useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -117,6 +125,7 @@ const View = () => {
   useEffect(() => {
     const s = params.symbol;
     //const n = location.state;
+    setEmail(JSON.parse(localStorage.getItem('profile')).result.email);
     console.log(s);
     api.getFundamental(s)
       .then((data) => {
@@ -165,6 +174,8 @@ const View = () => {
         var priceData = data.data;
         console.log(priceData);
         var dummyCandleprice = [], dummyCandlevolume = [];
+        var len = priceData.length;
+        setCurrentprice(priceData[len - 1].close);
         for (var i in priceData) {
           dummyCandleprice.push([
             priceData[i].date * 1000, // the date
@@ -257,6 +268,7 @@ const View = () => {
                 var dummyprice = data.data;
                 console.log(dummyprice);
                 var len = dummyprice.length;
+                setCurrentprice(dummyprice[len - 1].close);
                 var d = dummyprice[len - 1].date * 1000;
                 var o = dummyprice[len - 1].open;
                 var h = dummyprice[len - 1].high;
@@ -354,6 +366,10 @@ const View = () => {
       data: candlepricedata,
       tooltip: {
         valueDecimals: 2
+      },
+      lastVisiblePrice: {
+        enabled: true,
+        color: 'red'
       }
     }, {
       type: 'column',
@@ -472,6 +488,37 @@ const View = () => {
     window.location.reload();
   }
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure to do this.',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => {
+            var triggerData = { symbol: params.symbol, strikeupperprice: upperlimit, email: email, strikelowerprice: lowerlimit };
+            api.createTrigger(triggerData)
+              .then(data => {
+                console.log(data);
+              })
+              .catch(err => console.log(err));
+            setLowerlimit(0);
+            setUpperlimit(0);
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {
+            setLowerlimit(0);
+            setUpperlimit(0);
+          }
+        }
+      ]
+    });
+
+  };
+
   return (
 
     <Container maxWidth="lg">
@@ -579,12 +626,20 @@ const View = () => {
         </Container>
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <form className={classes.root} noValidate autoComplete="off">
-          Add Value : <TextField label="" />
+        <form className={classes.root} noValidate autoComplete="off" onSubmit={handleSubmit}>
+          <Typography variant="h4">
+            Current Price : {currentprice}$
+                </Typography>
           <br />
+          <hr /><br />
+          Upper limit : <TextField value={upperlimit} name="upperlimit" error={isuppererror} helperText="should be grater than current Price" onChange={e => { setUpperlimit(e.target.value); if (e.target.value < currentprice) { setIsuppererror(true); } else { setIsuppererror(false); } }} autoFocus required />
+          <br /><hr />
           <br />
-
-          <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 100 }}> Add </Button>
+          Lower limit : <TextField value={lowerlimit} name="lowerlimit" error={islowererror} helperText="should be less than current Price" onChange={e => { setLowerlimit(e.target.value); if (e.target.value > currentprice) { setIslowererror(true); } else { setIslowererror(false); } }} required />
+          <br /><hr /><br />
+          Email Address : <TextField name="email" value={email} onChange={e => setEmail(e.target.value)} required />
+          <hr /><br />
+          <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 250 }}> Add </Button>
         </form>
       </TabPanel>
     </Container>
