@@ -152,9 +152,11 @@ import { Container } from '@material-ui/core';
 
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
+import Footer from './components/Footer/Footer';
 import Auth from './components/Auth/Auth';
 import View from './components/View/View';
 import DataTrigger from './components/DataTrigger/DataTrigger';
+import About from './components/About/About';
 
 const App = () => {
   return (
@@ -184,7 +186,11 @@ const App = () => {
               <Redirect to="/auth" />
             )
           )} />
+          <Route exact path="/about" render={() => (
+              <About/>
+          )} />
         </Switch>
+        <Footer/>
       </Container>
     </BrowserRouter>
   )
