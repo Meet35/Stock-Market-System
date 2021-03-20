@@ -3,6 +3,7 @@ import { AppBar, Typography, Toolbar, Avatar, Button } from '@material-ui/core';
 import About from '../About/About';
 import useStyles from './styles';
 import { useHistory, useParams } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     const classes = useStyles();
@@ -19,19 +20,12 @@ const Footer = () => {
 
     
     return (
-        <AppBar className={classes.appBar} position="fixed" color="inherit">
-            <Toolbar>
-            {/* <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button> */}
-            
-            </Toolbar>
-            <Toolbar>
-            <Button variant="contained" onClick={handleClick}  color="secondary" size="large" style={{ width: 200 }}>About Us</Button>
-              
-            </Toolbar>
-            <Toolbar>
-            {/* <Button variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button> */}
-            </Toolbar>
-        </AppBar>
+        <Typography>
+            Quick Links
+            <Link to={{ pathname: `/about` }}>About Us</Link>
+        </Typography>
+        
+        
     );
 };
 
