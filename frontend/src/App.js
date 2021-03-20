@@ -157,6 +157,7 @@ import Auth from './components/Auth/Auth';
 import View from './components/View/View';
 import DataTrigger from './components/DataTrigger/DataTrigger';
 import About from './components/About/About';
+import Contact from './components/Contact/Contact';
 
 const App = () => {
   return (
@@ -188,6 +189,9 @@ const App = () => {
           )} />
           <Route exact path="/about" render={() => (
               <About/>
+          )} />
+          <Route exact path="/contact" render={() => (
+              <Contact/>
           )} />
         </Switch>
         <Footer/>

@@ -23,6 +23,7 @@ const Footer = () => {
         <Typography>
             Quick Links
             <Link to={{ pathname: `/about` }}>About Us</Link>
+            <Link to={{ pathname: `/contact` }}>Contact Us</Link>
         </Typography>
         
         
