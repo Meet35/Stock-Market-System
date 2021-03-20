@@ -1,5 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { deepPurple } from '@material-ui/core/colors';
+import grey from "@material-ui/core/colors/grey";
+
+const primary800 = grey["800"];
 
 export default makeStyles((theme) => ({
   appBar: {
@@ -41,4 +44,29 @@ export default makeStyles((theme) => ({
     color: theme.palette.getContrastText(deepPurple[500]),
     backgroundColor: deepPurple[500],
   },
+  root: {
+    maxWidth: 345,
+    backgroundColor: "#f50057"
+
+  },
+  media: {
+      paddingTop: '81.25%',
+      borderRadius: '50%',
+      margin: '28px'
+  },
+  root2: {
+      flexGrow: 1,
+      padding: theme.spacing(2),
+      background: '#f50057',
+      marginLeft: '0px',
+      marginRight: '0px',
+      marginTop: "10px",
+      bottom: 0,
+      top: 'auto',
+      
+  },
+  gcontainer:{
+      paddingLeft: "50px",
+      paddingRight: "20px"
+  }
 }));

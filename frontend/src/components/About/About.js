@@ -51,7 +51,10 @@ const About = () => {
       const classes = useStyles();
       const preventDefault = (event) => event.preventDefault();
     return (
+        
         <div className={classes.root2}>
+            <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundcolor="gray">Back</Button>
+
         <Grid
                 container
                 spacing={2}
