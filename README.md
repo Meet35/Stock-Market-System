@@ -1,4 +1,4 @@
-
+[<img src="./frontend/src/images/2.jpg" alt="StockWatch"/>](https://stockmarketwatch.netlify.app/)
 ### Table of Contents
 - [StockWatch - Stock Data Viewing Tool](#stockwatch---stock-data-viewing-tool)
 - [Functionality](#functionality)
