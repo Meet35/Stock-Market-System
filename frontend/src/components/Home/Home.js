@@ -10,6 +10,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
 import DeleteIcon from '@material-ui/icons/Delete';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {Skeleton} from "@material-ui/lab";
 import { AlpacaClient } from '@master-chief/alpaca'
 const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
 const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
@@ -22,6 +24,7 @@ const Home = () => {
     const [info, setInfo] = useState([])
     const [list, setList] = useState([])
     const [disable, setDisable] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
     let history = useHistory();
     var interval;
@@ -75,6 +78,7 @@ const Home = () => {
     }
 
     useEffect(() => {
+        setLoading(false);
         fetch("https://stock-market-system.herokuapp.com/stock")
             .then((response) => { return response.json(); })
             .then((data) => {
@@ -86,6 +90,7 @@ const Home = () => {
                     interval = setInterval(() => {
                         getPrice();
                     }, 3000);
+                    setLoading(true);
                 }).catch(() => {
                     console.log("sometimes it happens");
                 });
@@ -152,6 +157,10 @@ const Home = () => {
     }
 
     return (
+        <div>
+        {
+            loading?
+        
         <Container maxWidth="lg" >
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={4} justify="center" alignItems="center">
@@ -214,6 +223,15 @@ const Home = () => {
                 </Link>
             )}
         </Container>
+        :
+        <div>
+            <Skeleton height={200}/>
+            <Skeleton height={200}/>
+            <Skeleton height={200}/>
+            <Skeleton height={200}/>
+            <Skeleton height={200}/>
+        </div>}
+        </div>
     );
 };
 
