@@ -15,7 +15,7 @@ export const getWatchlist = async (req, res) => {
         for (var i in watchlist.symbols) {
             //console.log(watchlist.symbols[i]);
             var ans = await Stock.findOne({ symbol: watchlist.symbols[i] })
-            data.push({ symbol: ans.symbol, name: ans.name, price: "" });
+            data.push({ symbol: ans.symbol, name: ans.name, price: "", lastprice: ans.lastprice });
         }
         res.status(200).json(data);
     } catch (error) {

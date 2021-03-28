@@ -67,7 +67,7 @@ const Home = () => {
             var pricess = [];
             for (var i in whynotcount) {
                 var res = await client.getLastTrade({ symbol: whynotcount[i].symbol });
-                pricess.push({ symbol: whynotcount[i].symbol, name: whynotcount[i].name, price: res.last.price });
+                pricess.push({ symbol: whynotcount[i].symbol, name: whynotcount[i].name, price: res.last.price, lastprice: whynotcount[i].lastprice });
             }
             console.log(pricess);
             setList(pricess);
@@ -222,7 +222,7 @@ const Home = () => {
                                                 </Grid>
                                                 <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
                                                     <Typography variant="h6" component="h6">
-                                                        {row.price}
+                                                        {row.price}$ (({((row.price - row.lastprice) / 100).toFixed(2)})%)
                                                     </Typography>
                                                 </Grid>
                                             </Grid>

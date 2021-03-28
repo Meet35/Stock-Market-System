@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+//'https://stock-market-system.herokuapp.com/'
+//'http://localhost:5000'
+
 const API = axios.create({ baseURL: 'https://stock-market-system.herokuapp.com/' });
 
 API.interceptors.request.use((req) => {

@@ -33,7 +33,11 @@ export const fetchData = async (req, res) => {
                     for (var i = 0; i < symbols.length; i++) {
                         for (var bar in response[symbols[i]]) {
                             dummy.push({ symbol: symbols[i], date: response[symbols[i]][bar].startEpochTime, open: response[symbols[i]][bar].openPrice, high: response[symbols[i]][bar].highPrice, low: response[symbols[i]][bar].lowPrice, close: response[symbols[i]][bar].closePrice, volume: response[symbols[i]][bar].volume });
-                            updatedStock.push({ symbol: symbols[i], name: yadata[i].name, lastprice: response[symbols[i]][bar].closePrice });
+                            for (var j in yadata) {
+                                if (yadata[j].symbol == symbols[i]) {
+                                    updatedStock.push({ symbol: symbols[i], name: yadata[j].name, lastprice: response[symbols[i]][bar].closePrice });
+                                }
+                            }
                         }
                     }
                     if (dummy.length > 0) {
@@ -61,7 +65,11 @@ export const fetchData = async (req, res) => {
                     for (var i = 0; i < data1.length; i++) {
                         for (var bar in response[data1[i]]) {
                             dummy.push({ symbol: data1[i], date: response[data1[i]][bar].startEpochTime, open: response[data1[i]][bar].openPrice, high: response[data1[i]][bar].highPrice, low: response[data1[i]][bar].lowPrice, close: response[data1[i]][bar].closePrice, volume: response[data1[i]][bar].volume });
-                            updatedStock.push({ symbol: symbols[i], name: yadata[i + 200].name, lastprice: response[data1[i]][bar].closePrice });
+                            for (var j in yadata) {
+                                if (yadata[j].symbol == data1[i]) {
+                                    updatedStock.push({ symbol: data1[i], name: yadata[j].name, lastprice: response[data1[i]][bar].closePrice });
+                                }
+                            }
                         }
                     }
                     if (dummy.length > 0) {
@@ -89,7 +97,11 @@ export const fetchData = async (req, res) => {
                     for (var i = 0; i < data2.length; i++) {
                         for (var bar in response[data2[i]]) {
                             dummy.push({ symbol: data2[i], date: response[data2[i]][bar].startEpochTime, open: response[data2[i]][bar].openPrice, high: response[data2[i]][bar].highPrice, low: response[data2[i]][bar].lowPrice, close: response[data2[i]][bar].closePrice, volume: response[data2[i]][bar].volume });
-                            updatedStock.push({ symbol: symbols[i], name: yadata[i + 400].name, lastprice: response[data2[i]][bar].closePrice });
+                            for (var j in yadata) {
+                                if (yadata[j].symbol == data2[i]) {
+                                    updatedStock.push({ symbol: data2[i], name: yadata[j].name, lastprice: response[data2[i]][bar].closePrice });
+                                }
+                            }
                         }
                     }
                     if (dummy.length > 0) {
