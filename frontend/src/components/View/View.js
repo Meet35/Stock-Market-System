@@ -251,7 +251,7 @@ const View = () => {
       height: theme.spacing(3),
     },
     itsTrue: {
-      height: '300px',
+      height: '670px',
     },
   }));
 
@@ -505,6 +505,8 @@ const View = () => {
               .catch(err => console.log(err));
             setLowerlimit(0);
             setUpperlimit(0);
+            history.push('/triggers');
+            window.location.reload();
           }
         },
         {
@@ -540,6 +542,7 @@ const View = () => {
             constructorType={"stockChart"}
             options={configPrice}
           />
+          <hr />
         </Container>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -623,6 +626,7 @@ const View = () => {
             constructorType={"stockChart"}
             options={configLiveprice}
           />
+          <hr />
         </Container>
       </TabPanel>
       <TabPanel value={value} index={3}>

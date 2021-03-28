@@ -1,71 +1,121 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Avatar, Button, Paper, Grid, Typography, Container } from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Avatar, Button, Paper, Grid, Typography, Container, TextField } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+import IconButton from '@material-ui/core/IconButton';
+import Collapse from '@material-ui/core/Collapse';
+import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
-import { GoogleLogin } from 'react-google-login';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import ContactMailIcon from '@material-ui/icons/ContactMail';
 import Box from '@material-ui/core/Box';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
-import Icon from './icon';
-import { signin, signup } from '../../actions/auth';
-import { AUTH } from '../../actions/types';
 import useStyles from './styles';
 import Input from './Input';
 
-const initialState = { name:'', email: '', subject: '', message: '' };
-
 const Contact = () => {
-    const [form, setForm] = useState(initialState);
-    const dispatch = useDispatch();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [subject, setSubject] = useState('');
+    const [message, setMessage] = useState('');
+    const [open, setOpen] = React.useState(false);
     const history = useHistory();
     const classes = useStyles();
 
+    useEffect(() => {
+        console.log(JSON.parse(localStorage.getItem('profile')).result);
+        setName(JSON.parse(localStorage.getItem('profile')).result.name);
+        setEmail(JSON.parse(localStorage.getItem('profile')).result.email);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        history.push('/home');
+        //console.log(form);
+        confirmAlert({
+            title: subject,
+            message: message,
+            buttons: [
+                {
+                    label: 'Send',
+                    onClick: () => {
+                        setOpen(true);
+                        setMessage('');
+                        setSubject('');
+                        history.push('/contact');
+                    }
+                },
+                {
+                    label: 'Cancel',
+                    onClick: () => {
+                        setMessage('');
+                        history.push('/contact');
+                    }
+                }
+            ]
+        });
     };
 
     function handleClick(e) {
         e.preventDefault();
         history.push('/');
-        window.location.reload();
-      }
-
-
-    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+    }
 
     return (
-        
-        <Container component="main" maxWidth="xs" style={{ border: "none", boxShadow: "none" }}>
-            <Button variant="outlined" style={{ width: 120, marginBottom: 7 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundcolor="gray">Back</Button>
-
-            <Paper className={classes.paper} elevation={3} style={{ border: "none", boxShadow: "none" }}>
-                <Typography gutterBottom variant="h5" component="h1" fontWeight="fontWeightBold">
-              <Box fontSize={30}>
-            Contact Us
-            </Box>
-          </Typography>
-          <Typography variant="body2" component="p" fontWeight="fontWeightMedium">
-          <Box fontSize={20}>
-          Get In Touch with us  
-          </Box>
-            
-          </Typography>
-                <form className={classes.form} onSubmit={handleSubmit}>
-                    <Grid container spacing={2}>
-                    <Input name="name" label="Name" handleChange={handleChange} type="text" />
-                        <Input name="email" label="Email Address" handleChange={handleChange} type="email" />
-                        <Input name="email" label="Subject" handleChange={handleChange} type="text" />
-                        <Input name="email" label="Message" handleChange={handleChange} type="text" />
-                    </Grid>
-                    <Button type="submit" fullWidth variant="contained" color="secondary" className={classes.submit}>
-                        Send Message
-                    </Button>
-                   
-                </form>
-            </Paper>
+        <Container maxWidth="lg">
+            <Collapse in={open}>
+                <Alert
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                setOpen(false);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }>
+                    Sent...
+                </Alert>
+            </Collapse>
+            <Button variant="outlined" style={{ width: 120, marginTop: 10 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundcolor="gray">Back</Button>
+            <Container component="main" maxWidth="xs">
+                <Paper className={classes.paper} elevation={3}>
+                    <Avatar className={classes.avatar}>
+                        <ContactMailIcon />
+                    </Avatar>
+                    <Typography variant="h5" component="h1" fontWeight="fontWeightBold">
+                        Contact Us
+                    </Typography>
+                    <Typography variant="body2" component="p" fontWeight="fontWeightMedium">
+                        <Box fontSize={17}>
+                            Get In Touch with us
+                        </Box>
+                    </Typography>
+                    <form className={classes.form} onSubmit={handleSubmit}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={12}>
+                                <TextField disabled name="name" type="text" fullWidth variant="outlined" label="Name" value={name} onChange={e => setName(e.target.value)} required autoFocus />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <TextField disabled name="email" type="email" fullWidth variant="outlined" label="Email Address" value={email} onChange={e => setEmail(e.target.value)} required />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <TextField name="subject" type="text" fullWidth variant="outlined" label="Subject" value={subject} onChange={e => setSubject(e.target.value)} required />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <TextField name="message" type="text" fullWidth variant="outlined" label="Message" value={message} onChange={e => setMessage(e.target.value)} required />
+                            </Grid>
+                        </Grid>
+                        <Button type="submit" fullWidth variant="contained" color="secondary" className={classes.submit}>
+                            Send Message
+                        </Button>
+                    </form>
+                </Paper>
+            </Container>
         </Container>
     );
 };

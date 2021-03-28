@@ -8,8 +8,10 @@ export const signin = (formData, router) => async (dispatch) => {
         dispatch({ type: AUTH, data });
 
         router.push('/');
+
     } catch (error) {
         console.log(error);
+        alert("Invalid Credentials...");
     }
 };
 
@@ -22,5 +24,6 @@ export const signup = (formData, router) => async (dispatch) => {
         router.push('/');
     } catch (error) {
         console.log(error);
+        alert("Invalid Credentials...");
     }
 };

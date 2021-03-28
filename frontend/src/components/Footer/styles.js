@@ -6,8 +6,8 @@ const primary800 = grey["800"];
 
 export default makeStyles((theme) => ({
   appBar: {
-    top:'auto',
-    bottom:0,
+    top: 'auto',
+    bottom: 0,
     borderRadius: 20,
     display: 'flex',
     flexDirection: 'row',
@@ -45,28 +45,27 @@ export default makeStyles((theme) => ({
     backgroundColor: deepPurple[500],
   },
   root: {
-    maxWidth: 345,
-    backgroundColor: "#f50057"
-
+    maxWidth: 500,
+    backgroundColor: "#262626"
   },
   media: {
-      paddingTop: '81.25%',
-      borderRadius: '50%',
-      margin: '28px'
+    paddingTop: '81.25%',
+    borderRadius: '50%',
+    margin: '28px'
   },
   root2: {
-      flexGrow: 1,
-      padding: theme.spacing(2),
-      background: '#f50057',
-      marginLeft: '0px',
-      marginRight: '0px',
-      marginTop: "10px",
-      bottom: 0,
-      top: 'auto',
-      
+    flexGrow: 1,
+    padding: theme.spacing(2),
+    background: '#262626',
+    marginLeft: '0px',
+    marginRight: '0px',
+    marginTop: "10px",
+    bottom: 0,
+    top: 'auto',
+
   },
-  gcontainer:{
-      paddingLeft: "50px",
-      paddingRight: "20px"
+  gcontainer: {
+    paddingLeft: "50px",
+    paddingRight: "20px"
   }
 }));

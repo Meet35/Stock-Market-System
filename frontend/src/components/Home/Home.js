@@ -11,7 +11,7 @@ import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {Skeleton} from "@material-ui/lab";
+import { Skeleton } from "@material-ui/lab";
 import { AlpacaClient } from '@master-chief/alpaca'
 const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
 const API_SECRET = 'oKItsTlpvrE75tNhQI1mqXulcpGj68FceNqwc435';
@@ -158,79 +158,80 @@ const Home = () => {
 
     return (
         <div>
-        {
-            loading?
-        
-        <Container maxWidth="lg" >
-            <form onSubmit={handleSubmit}>
-                <Grid container spacing={4} justify="center" alignItems="center">
-                    <Grid item xs>
-                        <Autocomplete
-                            id="combo-box-demo"
-                            options={info}
-                            getOptionLabel={(option) => option.symbol + " - " + option.name}
-                            getOptionSelected={(option, value) => option.symbol === value.symbol}
-                            style={{ width: 600 }}
-                            autoComplete
-                            value={q}
-                            onChange={(event, newValue) => {
-                                setQ(newValue);
-                            }}
-                            renderInput={(params) => <TextField {...params} label="search stocks" variant="outlined" />}
-                        />
-                    </Grid>
-                    <Grid item xs>
-                        <Box display="flex" justifyContent="space-between">
-                            <Button disabled={disable} variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button>
-                            <Button variant="contained" onClick={showTriggers} color="secondary" size="large" style={{ width: 260 }}>Show all Triggers</Button>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </form>
-            <hr />
-            {list.map((row, index) =>
-                <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} key={index} >
-                    <Box mb={1} key={index}>
-                        <Card className={classes.root} variant="outlined">
-                            <CardHeader
-                                avatar={
-                                    <Typography>
-                                        {row.symbol}
-                                    </Typography>
-                                }
-                                action={
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        className={classes.button}
-                                        startIcon={<DeleteIcon />}
-                                        onClick={(e) => handleClick(row.symbol, e)}
-                                    >
-                                        Delete
+            {
+                loading ?
+
+                    <Container maxWidth="lg">
+                        <form onSubmit={handleSubmit}>
+                            <Grid container spacing={4} justify="center" alignItems="center">
+                                <Grid item xs>
+                                    <Autocomplete
+                                        id="combo-box-demo"
+                                        options={info}
+                                        getOptionLabel={(option) => option.symbol + " - " + option.name}
+                                        getOptionSelected={(option, value) => option.symbol === value.symbol}
+                                        style={{ width: 600 }}
+                                        autoComplete
+                                        value={q}
+                                        onChange={(event, newValue) => {
+                                            setQ(newValue);
+                                        }}
+                                        renderInput={(params) => <TextField {...params} label="search stocks" variant="outlined" />}
+                                    />
+                                </Grid>
+                                <Grid item xs>
+                                    <Box display="flex" justifyContent="space-between">
+                                        <Button disabled={disable} variant="contained" type="submit" color="secondary" size="large" style={{ width: 260 }}>Add to Watchlist</Button>
+                                        <Button variant="contained" onClick={showTriggers} color="secondary" size="large" style={{ width: 260 }}>Show all Triggers</Button>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                        </form>
+                        <hr />
+                        {list.map((row, index) =>
+                            <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} key={index} >
+                                <Box mb={1} key={index}>
+                                    <Card className={classes.root} variant="outlined">
+                                        <CardHeader
+                                            avatar={
+                                                <Typography>
+                                                    {row.symbol}
+                                                </Typography>
+                                            }
+                                            action={
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    className={classes.button}
+                                                    startIcon={<DeleteIcon />}
+                                                    onClick={(e) => handleClick(row.symbol, e)}
+                                                >
+                                                    Delete
                                 </Button>
-                                }
-                            />
-                            <CardContent>
-                                <Typography variant="h6" component="h6">
-                                    {row.name}
-                                </Typography>
-                                <Typography variant="h6" component="h6">
-                                    {row.price}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Box>
-                </Link>
-            )}
-        </Container>
-        :
-        <div>
-            <Skeleton height={200}/>
-            <Skeleton height={200}/>
-            <Skeleton height={200}/>
-            <Skeleton height={200}/>
-            <Skeleton height={200}/>
-        </div>}
+                                            }
+                                        />
+                                        <CardContent>
+                                            <Typography variant="h6" component="h6">
+                                                {row.name}
+                                            </Typography>
+                                            <Typography variant="h6" component="h6">
+                                                {row.price}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                </Box>
+                            </Link>
+                        )}
+                        <hr />
+                    </Container>
+                    :
+                    <div>
+                        <Skeleton height={200} />
+                        <Skeleton height={200} />
+                        <Skeleton height={200} />
+                        <Skeleton height={200} />
+                        <Skeleton height={200} />
+                    </div>}
         </div>
     );
 };
