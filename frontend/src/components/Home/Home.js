@@ -10,7 +10,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
 import DeleteIcon from '@material-ui/icons/Delete';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { Skeleton } from "@material-ui/lab";
 import { AlpacaClient } from '@master-chief/alpaca'
 const API_KEY = 'PK3FXI9WQ3EZ3F70F0C1';
@@ -131,6 +130,10 @@ const Home = () => {
         avatar: {
             backgroundColor: 'red',
         },
+        gcontainer: {
+            paddingLeft: "50px",
+            paddingRight: "20px"
+        }
     });
 
     const classes = useStyles();
@@ -189,7 +192,7 @@ const Home = () => {
                         </form>
                         <hr />
                         {list.map((row, index) =>
-                            <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} key={index} >
+                            <Link to={{ pathname: `/view/${row.symbol}`, state: { symbol: row.symbol, name: row.name } }} key={index} style={{ textDecoration: 'none' }} >
                                 <Box mb={1} key={index}>
                                     <Card className={classes.root} variant="outlined">
                                         <CardHeader
@@ -211,12 +214,18 @@ const Home = () => {
                                             }
                                         />
                                         <CardContent>
-                                            <Typography variant="h6" component="h6">
-                                                {row.name}
-                                            </Typography>
-                                            <Typography variant="h6" component="h6">
-                                                {row.price}
-                                            </Typography>
+                                            <Grid container spacing={2} direction="row" justify="flex-start" alignItems="flex-start">
+                                                <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
+                                                    <Typography variant="h6" component="h6">
+                                                        {row.name}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
+                                                    <Typography variant="h6" component="h6">
+                                                        {row.price}
+                                                    </Typography>
+                                                </Grid>
+                                            </Grid>
                                         </CardContent>
                                     </Card>
                                 </Box>

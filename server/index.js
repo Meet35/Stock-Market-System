@@ -13,6 +13,8 @@ import triggerRouter from './routes/trigger.js';
 import { fetchData } from './script.js';
 import { fetchLivedata } from './livescript.js';
 import { removeData } from './initialscript.js';
+import { removeStock } from './changestockscript.js';
+
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 require('dotenv').config();
@@ -34,6 +36,7 @@ app.use("/trigger", triggerRouter);
 app.get("/run", fetchData);
 app.get("/liverun", fetchLivedata);
 app.get("/initialconfigure", removeData);
+app.get("/deletestock", removeStock);
 app.get('/', (req, res) => {
   res.send('Welcome to Schedule-job for fetching stocks');
 })
