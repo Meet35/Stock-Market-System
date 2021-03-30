@@ -1,12 +1,10 @@
 
-import { AppBar, Typography, Toolbar, Avatar, Button } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
-import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Joker from '../../images/J.jfif'
@@ -48,7 +46,7 @@ const About = () => {
   }
 
   const classes = useStyles();
-  const preventDefault = (event) => event.preventDefault();
+  //const preventDefault = (event) => event.preventDefault();
 
   return (
 
@@ -71,16 +69,11 @@ const About = () => {
               title="Joker"
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h1" fontWeight="fontWeightBold">
-                <Box fontSize={30}>
-                  Meet Dobariya
-            </Box>
+              <Typography gutterBottom variant="h4" component="h1" fontWeight="fontWeightBold">
+                Meet Dobariya
               </Typography>
-              <Typography variant="body2" component="p" fontWeight="fontWeightMedium">
-                <Box fontSize={20}>
-                  I am Competitive Coder. I love solving Problem. I hate Frontend.
-            </Box>
-
+              <Typography variant="body1" component="p">
+                I am Competitive Coder. I love solving Problem. I hate Frontend.
               </Typography>
             </CardContent>
             <CardActions>
@@ -102,15 +95,11 @@ const About = () => {
               title="Contemplative Reptile"
             />
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h1" fontWeight="fontWeightBold">
-                <Box fontSize={30}>
-                  Brijesh Khunt
-            </Box>
+              <Typography gutterBottom variant="h4" component="h1" fontWeight="fontWeightBold">
+                Brijesh Khunt
               </Typography>
-              <Typography variant="body2" component="p" fontWeight="fontWeightMedium">
-                <Box fontSize={20}>
-                  Want to be a Quant Trader...
-            </Box>
+              <Typography variant="body1" component="p">
+                Want to be a Quant Trader...
               </Typography>
             </CardContent>
             <CardActions>

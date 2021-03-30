@@ -1,8 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { deepPurple } from '@material-ui/core/colors';
-import grey from "@material-ui/core/colors/grey";
-
-const primary800 = grey["800"];
 
 export default makeStyles((theme) => ({
   appBar: {

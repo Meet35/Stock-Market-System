@@ -28,3 +28,5 @@ export const getStocksymbol = (symbol) => API.get(`stock/${symbol}`);
 export const getTrigger = () => API.get(`/trigger`);
 export const deleteTrigger = (id) => API.delete(`/trigger/${id}`);
 export const createTrigger = (triggerData) => API.post(`/trigger`, triggerData);
+
+export const addContact = (contactData) => API.post(`/contact`, contactData);

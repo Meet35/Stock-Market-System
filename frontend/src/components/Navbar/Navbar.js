@@ -25,7 +25,6 @@ const Navbar = () => {
 
     useEffect(() => {
         const token = user?.token;
-
         if (token) {
             const decodedToken = decode(token);
 
@@ -35,6 +34,15 @@ const Navbar = () => {
         setUser(JSON.parse(localStorage.getItem('profile')));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
+
+    function giveName(gname) {
+        const words = gname.split(" ");
+        for (let i = 0; i < words.length; i++) {
+            words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+        }
+        var ans = words.join(" ");
+        return ans;
+    }
 
     return (
         <AppBar className={classes.appBar} position="static" color="inherit">
@@ -46,7 +54,7 @@ const Navbar = () => {
                 {user?.result ? (
                     <div className={classes.profile}>
                         <Avatar className={classes.purple} alt={user?.result.name} src={user?.result.imageUrl}>{user?.result.name.charAt(0).toUpperCase()}</Avatar>
-                        <Typography className={classes.userName} variant="h6">{user?.result.name}</Typography>
+                        <Typography className={classes.userName} variant="h6">{giveName(user?.result.name)}</Typography>
                         <Button variant="contained" className={classes.logout} color="secondary" onClick={logout}>Logout</Button>
                     </div>
                 ) : (

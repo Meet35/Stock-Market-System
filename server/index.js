@@ -10,10 +10,13 @@ import priceRouter from './routes/price.js';
 import livepriceRouter from './routes/liveprice.js';
 import stockinfoRouter from './routes/stockinfo.js';
 import triggerRouter from './routes/trigger.js';
+import contactRouter from './routes/contact.js';
 import { fetchData } from './script.js';
 import { fetchLivedata } from './livescript.js';
 import { removeData } from './initialscript.js';
 import { removeStock } from './changestockscript.js';
+import { checkExecuteTrigger } from './triggerscript.js';
+import { fetchOpenPrice } from './openpricescript.js';
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -32,11 +35,14 @@ app.use("/price", priceRouter);
 app.use("/liveprice", livepriceRouter);
 app.use("/fundamental", stockinfoRouter);
 app.use("/trigger", triggerRouter);
+app.use("/contact", contactRouter);
 
 app.get("/run", fetchData);
 app.get("/liverun", fetchLivedata);
 app.get("/initialconfigure", removeData);
 app.get("/deletestock", removeStock);
+app.get("/executetrigger", checkExecuteTrigger);
+app.get("/fetchopenprice", fetchOpenPrice);
 app.get('/', (req, res) => {
   res.send('Welcome to Schedule-job for fetching stocks');
 })

@@ -108,9 +108,9 @@ const View = () => {
   var chartComponent = useRef(null);
   let history = useHistory();
   const [value, setValue] = React.useState(0);
-  const [currentprice, setCurrentprice] = useState(0);
-  const [upperlimit, setUpperlimit] = useState(0);
-  const [lowerlimit, setLowerlimit] = useState(0);
+  const [currentprice, setCurrentprice] = useState(0.00);
+  const [upperlimit, setUpperlimit] = useState(0.00);
+  const [lowerlimit, setLowerlimit] = useState(0.00);
   const [isuppererror, setIsuppererror] = useState(false);
   const [islowererror, setIslowererror] = useState(false);
   const [email, setEmail] = useState("");
@@ -501,12 +501,12 @@ const View = () => {
             api.createTrigger(triggerData)
               .then(data => {
                 console.log(data);
+                setLowerlimit(0);
+                setUpperlimit(0);
+                history.push('/triggers');
+                window.location.reload();
               })
               .catch(err => console.log(err));
-            setLowerlimit(0);
-            setUpperlimit(0);
-            history.push('/triggers');
-            window.location.reload();
           }
         },
         {

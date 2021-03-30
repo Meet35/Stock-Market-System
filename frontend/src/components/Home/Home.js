@@ -111,6 +111,7 @@ const Home = () => {
     const useStyles = makeStyles({
         root: {
             minWidth: 275,
+            backgroundColor: "#f2f2f2"
         },
         bullet: {
             display: 'inline-block',
@@ -221,9 +222,11 @@ const Home = () => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
-                                                    <Typography variant="h6" component="h6">
-                                                        {row.price}$ (({((row.price - row.lastprice) / 100).toFixed(2)})%)
+                                                    {row.price !== "" ?
+                                                        <Typography variant="h6" component="h6">
+                                                            {row.price}$ (({((row.price - row.lastprice) / 100).toFixed(4)})%)
                                                     </Typography>
+                                                        : null}
                                                 </Grid>
                                             </Grid>
                                         </CardContent>
@@ -235,8 +238,6 @@ const Home = () => {
                     </Container>
                     :
                     <div>
-                        <Skeleton height={200} />
-                        <Skeleton height={200} />
                         <Skeleton height={200} />
                         <Skeleton height={200} />
                         <Skeleton height={200} />

@@ -6,13 +6,12 @@ import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 import { useHistory } from 'react-router-dom';
 import ContactMailIcon from '@material-ui/icons/ContactMail';
-import Box from '@material-ui/core/Box';
 import ArrowBack from '@material-ui/icons/NavigateBeforeTwoTone';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import * as api from '../../api/index.js';
 
 import useStyles from './styles';
-import Input from './Input';
 
 const Contact = () => {
     const [name, setName] = useState('');
@@ -24,7 +23,7 @@ const Contact = () => {
     const classes = useStyles();
 
     useEffect(() => {
-        console.log(JSON.parse(localStorage.getItem('profile')).result);
+        //console.log(JSON.parse(localStorage.getItem('profile')).result);
         setName(JSON.parse(localStorage.getItem('profile')).result.name);
         setEmail(JSON.parse(localStorage.getItem('profile')).result.email);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,10 +39,15 @@ const Contact = () => {
                 {
                     label: 'Send',
                     onClick: () => {
-                        setOpen(true);
-                        setMessage('');
-                        setSubject('');
-                        history.push('/contact');
+                        var contactData = { subject: subject, message: message, email: email, name: name };
+                        api.addContact(contactData)
+                            .then(data => {
+                                setOpen(true);
+                                setMessage('');
+                                setSubject('');
+                                history.push('/contact');
+                            })
+                            .catch(err => console.log(err));
                     }
                 },
                 {
@@ -63,7 +67,7 @@ const Contact = () => {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" style={{ marginBottom: 20 }}>
             <Collapse in={open}>
                 <Alert
                     action={
@@ -90,10 +94,8 @@ const Contact = () => {
                     <Typography variant="h5" component="h1" fontWeight="fontWeightBold">
                         Contact Us
                     </Typography>
-                    <Typography variant="body2" component="p" fontWeight="fontWeightMedium">
-                        <Box fontSize={17}>
-                            Get In Touch with us
-                        </Box>
+                    <Typography variant="body1" component="p" fontWeight="fontWeightMedium">
+                        Get In Touch with us
                     </Typography>
                     <form className={classes.form} onSubmit={handleSubmit}>
                         <Grid container spacing={2}>
