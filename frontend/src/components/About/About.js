@@ -73,7 +73,7 @@ const About = () => {
                 Meet Dobariya
               </Typography>
               <Typography variant="body1" component="p">
-                I am Competitive Coder. I love solving Problem. I hate Frontend.
+                Exporing Myself
               </Typography>
             </CardContent>
             <CardActions>
