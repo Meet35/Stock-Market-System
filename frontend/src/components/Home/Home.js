@@ -157,7 +157,7 @@ const Home = () => {
     const showTriggers = async (e) => {
         e.preventDefault();
         history.push(`/triggers`);
-        // window.location.reload();
+        window.location.reload();
     }
 
     return (
