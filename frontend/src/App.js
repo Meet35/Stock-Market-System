@@ -147,7 +147,7 @@ const App = () => {
 export default App;
 */
 
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import React from 'react';
 
@@ -164,7 +164,7 @@ import Clock from './components/Clock/Clock';
 const App = () => {
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Container maxWidth="lg">
         <Clock />
         <Navbar />
@@ -204,7 +204,7 @@ const App = () => {
         </Switch>
         <Footer />
       </Container>
-    </BrowserRouter>
+    </HashRouter>
   )
 };
 
