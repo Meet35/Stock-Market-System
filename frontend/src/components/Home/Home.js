@@ -77,25 +77,27 @@ const Home = () => {
     }
 
     useEffect(() => {
-        setLoading(false);
-        fetch("https://stock-market-system.herokuapp.com/stock")
-            .then((response) => { return response.json(); })
-            .then((data) => {
-                setInfo(data);
-                console.log(data);
-                //setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
-                getList().then(() => {
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                    interval = setInterval(() => {
-                        getPrice();
-                    }, 3000);
-                    setLoading(true);
-                }).catch(() => {
-                    console.log("sometimes it happens");
-                });
+        if (localStorage.getItem('profile')) {
+            setLoading(false);
+            fetch("https://stock-market-system.herokuapp.com/stock")
+                .then((response) => { return response.json(); })
+                .then((data) => {
+                    setInfo(data);
+                    console.log(data);
+                    //setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
+                    getList().then(() => {
+                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                        interval = setInterval(() => {
+                            getPrice();
+                        }, 3000);
+                        setLoading(true);
+                    }).catch(() => {
+                        console.log("sometimes it happens");
+                    });
 
-            });
-        return () => { clearInterval(interval); };
+                });
+            return () => { clearInterval(interval); };
+        }
     }, [])
 
     const handleSubmit = async (e) => {

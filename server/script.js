@@ -35,7 +35,7 @@ export const fetchData = async (req, res) => {
                             dummy.push({ symbol: symbols[i], date: response[symbols[i]][bar].startEpochTime, open: response[symbols[i]][bar].openPrice, high: response[symbols[i]][bar].highPrice, low: response[symbols[i]][bar].lowPrice, close: response[symbols[i]][bar].closePrice, volume: response[symbols[i]][bar].volume });
                             for (var j in yadata) {
                                 if (yadata[j].symbol == symbols[i]) {
-                                    updatedStock.push({ symbol: symbols[i], name: yadata[j].name, lastprice: response[symbols[i]][bar].closePrice });
+                                    updatedStock.push({ symbol: symbols[i], name: yadata[j].name, lastprice: response[symbols[i]][bar].openPrice });
                                 }
                             }
                         }
@@ -67,7 +67,7 @@ export const fetchData = async (req, res) => {
                             dummy.push({ symbol: data1[i], date: response[data1[i]][bar].startEpochTime, open: response[data1[i]][bar].openPrice, high: response[data1[i]][bar].highPrice, low: response[data1[i]][bar].lowPrice, close: response[data1[i]][bar].closePrice, volume: response[data1[i]][bar].volume });
                             for (var j in yadata) {
                                 if (yadata[j].symbol == data1[i]) {
-                                    updatedStock.push({ symbol: data1[i], name: yadata[j].name, lastprice: response[data1[i]][bar].closePrice });
+                                    updatedStock.push({ symbol: data1[i], name: yadata[j].name, lastprice: response[data1[i]][bar].openPrice });
                                 }
                             }
                         }
@@ -99,7 +99,7 @@ export const fetchData = async (req, res) => {
                             dummy.push({ symbol: data2[i], date: response[data2[i]][bar].startEpochTime, open: response[data2[i]][bar].openPrice, high: response[data2[i]][bar].highPrice, low: response[data2[i]][bar].lowPrice, close: response[data2[i]][bar].closePrice, volume: response[data2[i]][bar].volume });
                             for (var j in yadata) {
                                 if (yadata[j].symbol == data2[i]) {
-                                    updatedStock.push({ symbol: data2[i], name: yadata[j].name, lastprice: response[data2[i]][bar].closePrice });
+                                    updatedStock.push({ symbol: data2[i], name: yadata[j].name, lastprice: response[data2[i]][bar].openPrice });
                                 }
                             }
                         }

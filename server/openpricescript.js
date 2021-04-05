@@ -24,9 +24,10 @@ export const fetchOpenPrice = async (req, res) => {
                 symbols.push(yadata[i].symbol);
             }
             var todayDate = new Date().toISOString().slice(0, 10);
-            //todayDate = "2021-03-26";
-            alpaca.getBars('1Min', symbols, { limit: 1000, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
+            //todayDate = "2021-04-01";
+            alpaca.getBars('1Min', symbols, { limit: 2, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
                 .then(response => {
+                    //console.log(response);
                     var updatedStock = [];
                     for (var i = 0; i < symbols.length; i++) {
                         var len = response[symbols[i]].length;
@@ -52,7 +53,7 @@ export const fetchOpenPrice = async (req, res) => {
             for (var i = 200; i < 400; i++) {
                 data1.push(yadata[i].symbol);
             }
-            alpaca.getBars('1Min', data1, { limit: 1000, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
+            alpaca.getBars('1Min', data1, { limit: 2, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
                 .then(response => {
                     var updatedStock = [];
                     for (var i = 0; i < data1.length; i++) {
@@ -79,7 +80,7 @@ export const fetchOpenPrice = async (req, res) => {
             for (var i = 400; i < 494; i++) {
                 data2.push(yadata[i].symbol);
             }
-            alpaca.getBars('1Min', data2, { limit: 1000, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
+            alpaca.getBars('1Min', data2, { limit: 2, start: `${todayDate}T09:30:00-04:00`, end: `${todayDate}T16:00:00-04:00` })
                 .then(response => {
                     var updatedStock = [];
                     for (var i = 0; i < data2.length; i++) {

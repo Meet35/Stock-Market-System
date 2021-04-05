@@ -42,7 +42,7 @@ app.get("/liverun", fetchLivedata);
 app.get("/initialconfigure", removeData);
 app.get("/deletestock", removeStock);
 app.get("/executetrigger", checkExecuteTrigger);
-app.get("/fetchopenprice", fetchOpenPrice);
+//app.get("/fetchopenprice", fetchOpenPrice);
 app.get('/', (req, res) => {
   res.send('Welcome to Schedule-job for fetching stocks');
 })
