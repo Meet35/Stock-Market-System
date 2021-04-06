@@ -481,7 +481,6 @@ const View = () => {
   function handleClick(e) {
     e.preventDefault();
     history.push('/');
-    window.location.reload();
   }
 
   function gotoStock(item, e) {
@@ -494,7 +493,7 @@ const View = () => {
     e.preventDefault();
     confirmAlert({
       title: 'Confirm to submit',
-      message: 'Are you sure to do this.',
+      message: 'Are you sure to add triigger',
       buttons: [
         {
           label: 'Yes',
@@ -506,7 +505,6 @@ const View = () => {
                 setLowerlimit(0);
                 setUpperlimit(0);
                 history.push('/triggers');
-                window.location.reload();
               })
               .catch(err => console.log(err));
           }

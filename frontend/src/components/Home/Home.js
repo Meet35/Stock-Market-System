@@ -9,7 +9,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Skeleton } from "@material-ui/lab";
 import { AlpacaClient } from '@master-chief/alpaca'
@@ -152,7 +152,6 @@ const Home = () => {
     const showTriggers = async (e) => {
         e.preventDefault();
         history.push(`/triggers`);
-        window.location.reload();
     }
 
     return (

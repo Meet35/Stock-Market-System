@@ -23,7 +23,8 @@ const DataTrigger = () => {
     function getTriggers() {
         api.getTrigger()
             .then(data => {
-                //console.log(data);
+                console.log(data.data);
+
                 setList(data.data);
                 setLoading(false);
             })
@@ -62,7 +63,15 @@ const DataTrigger = () => {
         gcontainer: {
             paddingLeft: "30px",
             paddingRight: "10px"
-        }
+        },
+        errcon: {
+            align: 'center',
+        },
+        extrapadding: {
+            paddingLeft: "30px",
+            paddingRight: "10px",
+            minHeight: 200,
+        },
     });
 
     const classes = useStyles();
@@ -94,58 +103,68 @@ const DataTrigger = () => {
                 :
                 <Container maxWidth="lg">
                     <Button variant="outlined" style={{ width: 120, marginBottom: 12 }} fontSize="medium" color="inherit" startIcon={<ArrowBack style={{ fontSize: 30 }} />} onClick={(e) => handleClick(e)} backgroundcolor="gray">Back</Button>
-                    {list.map((row, index) =>
-                        <Box mb={1} key={index}>
-                            <Card className={classes.root} variant="outlined">
-                                <CardHeader
-                                    title={
-                                        <Typography variant="overline" component="div">
-                                            <Box fontWeight={520} fontSize="h6.fontSize">
-                                                {row.symbol} - {row.name}
-                                            </Box>
-                                        </Typography>
-                                    }
-                                    action={
-                                        <Button variant="contained" color="secondary" className={classes.button} startIcon={<DeleteIcon />} onClick={(e) => deleteClick(row._id, e)}>
-                                            Delete
+                    {
+                        (list.length > 0) ? list.map((row, index) =>
+                            <Box mb={1} key={index}>
+                                <Card className={classes.root} variant="outlined">
+                                    <CardHeader
+                                        title={
+                                            <Typography variant="overline" component="div">
+                                                <Box fontWeight={520} fontSize="h6.fontSize">
+                                                    {row.symbol} - {row.name}
+                                                </Box>
+                                            </Typography>
+                                        }
+                                        action={
+                                            <Button variant="contained" color="secondary" className={classes.button} startIcon={<DeleteIcon />} onClick={(e) => deleteClick(row._id, e)}>
+                                                Delete
                                         </Button>
-                                    }
-                                />
-                                <CardContent>
-                                    <Grid container spacing={1} direction="row" justify="flex-start" alignItems="flex-start">
-                                        <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
-                                            <Typography variant="overline" component="div">
-                                                <Box fontWeight={500} fontSize="body1.fontSize">
-                                                    lowerlimit : {row.strikelowerprice}$
+                                        }
+                                    />
+                                    <CardContent>
+                                        <Grid container spacing={1} direction="row" justify="flex-start" alignItems="flex-start">
+                                            <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
+                                                <Typography variant="overline" component="div">
+                                                    <Box fontWeight={500} fontSize="body1.fontSize">
+                                                        lowerlimit : {row.strikelowerprice}$
                                                 </Box>
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
-                                            <Typography variant="overline" component="div">
-                                                <Box fontWeight={500} fontSize="body1.fontSize">
-                                                    upperlimit : {row.strikeupperprice}$
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
+                                                <Typography variant="overline" component="div">
+                                                    <Box fontWeight={500} fontSize="body1.fontSize">
+                                                        upperlimit : {row.strikeupperprice}$
                                                 </Box>
-                                            </Typography>
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
+                                                <Typography variant="overline" component="div">
+                                                    <Box fontWeight={500} fontSize="body1.fontSize">
+                                                        mailTo : {row.email}
+                                                    </Box>
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
+                                                <Typography variant="subtitle2" component="div" align="right" style={{ marginTop: 15 }}>
+                                                    <Box fontWeight={500} fontSize="subtitle2.fontSize">
+                                                        Created at {new Date(row.date).toUTCString()}
+                                                    </Box>
+                                                </Typography>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
-                                            <Typography variant="overline" component="div">
-                                                <Box fontWeight={500} fontSize="body1.fontSize">
-                                                    mailTo : {row.email}
-                                                </Box>
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={6} className={classes.gcontainer}>
-                                            <Typography variant="subtitle2" component="div" align="right" style={{ marginTop: 15 }}>
-                                                <Box fontWeight={500} fontSize="subtitle2.fontSize">
-                                                    Created at {new Date(row.date).toUTCString()}
-                                                </Box>
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </CardContent>
-                            </Card>
-                        </Box>
-                    )}
+                                    </CardContent>
+                                </Card>
+                            </Box>
+                        ) : <Grid container spacing={1} direction="row" justify="flex-start" alignItems="flex-start">
+
+                            <Grid item xs={12} sm={12} md={12} className={classes.extrapadding}>
+                                <Typography variant="overline" component="div" align='center'>
+                                    <Box fontWeight={550} fontSize="h5.fontSize" marginTop={8}>
+                                        You have not added any trigger...
+                                    </Box>
+                                </Typography>
+                            </Grid>
+                        </Grid>}
                 </Container>}
         </div>
 
