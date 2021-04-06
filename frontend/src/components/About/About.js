@@ -65,7 +65,7 @@ const About = () => {
           <Card className={classes.root} style={{ border: "none", boxShadow: "none" }}>
             <CardMedia
               className={classes.media}
-              image={Joker}
+              image="https://media-exp1.licdn.com/dms/image/C5103AQE-WLht3Jy14w/profile-displayphoto-shrink_200_200/0/1579801466114?e=1623283200&v=beta&t=Y5XacO1NxxfOWopDK6zO1AcRmYhv18MEuqnmUTck4-U"
               title="Joker"
             />
             <CardContent>
@@ -77,12 +77,12 @@ const About = () => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Link to={{ pathname: 'https://github.com/Meet35' }} target="_blank" >
+              <a href='https://github.com/Meet35' rel="noreferrer" target="_blank">
                 <GitHubIcon fontSize="large" />
-              </Link>
-              <Link to={{ pathname: 'https://www.linkedin.com/in/meet-dobariya-827b6519a/' }} target="_blank" >
+              </a>
+              <a href='https://www.linkedin.com/in/meet-dobariya-827b6519a/' rel="noreferrer" target="_blank">
                 <LinkedInIcon fontSize="large" />
-              </Link>
+              </a>
             </CardActions>
           </Card>
         </Grid>
@@ -103,12 +103,12 @@ const About = () => {
               </Typography>
             </CardContent>
             <CardActions>
-              <Link to={{ pathname: 'https://github.com/BJKhunt' }} target="_blank" >
+              <a href='https://github.com/BJKhunt' rel="noreferrer" target="_blank">
                 <GitHubIcon fontSize="large" />
-              </Link>
-              <Link to={{ pathname: 'https://www.linkedin.com/in/bjkhunt' }} target="_blank" >
+              </a>
+              <a href='https://www.linkedin.com/in/bjkhunt' rel="noreferrer" target="_blank">
                 <LinkedInIcon fontSize="large" />
-              </Link>
+              </a>
             </CardActions>
           </Card>
         </Grid>

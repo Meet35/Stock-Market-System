@@ -175,7 +175,9 @@ const View = () => {
         console.log(priceData);
         var dummyCandleprice = [], dummyCandlevolume = [];
         var len = priceData.length;
-        setCurrentprice(priceData[len - 1].close);
+        if (len > 0) {
+          setCurrentprice(priceData[len - 1].close);
+        }
         for (var i in priceData) {
           dummyCandleprice.push([
             priceData[i].date * 1000, // the date

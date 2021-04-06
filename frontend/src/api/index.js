@@ -24,6 +24,7 @@ export const getLiveprice = (symbol) => API.get(`liveprice/${symbol}`);
 export const getFundamental = (symbol) => API.get(`fundamental/${symbol}`);
 
 export const getStocksymbol = (symbol) => API.get(`stock/${symbol}`);
+export const getStocks = () => API.get(`/stock`);
 
 export const getTrigger = () => API.get(`/trigger`);
 export const deleteTrigger = (id) => API.delete(`/trigger/${id}`);

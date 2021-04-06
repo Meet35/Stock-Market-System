@@ -9,7 +9,38 @@ import { reducers } from './reducers';
 import './index.css';
 import App from './App';
 
-const store = createStore(reducers, compose(applyMiddleware(thunk)));
+//const enhancers = [composeWithDevTools(), applyMiddleware(thunk)];
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem('state');
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  } catch (e) {
+    return undefined;
+  }
+};
+
+const saveState = (state) => {
+  try {
+    const serializedState = JSON.stringify(state);
+    localStorage.setItem('state', serializedState);
+  } catch (e) {
+    // Ignore write errors;
+  }
+};
+
+const persistedState = loadState();
+
+//const store = createStore(reducers, compose(...enhancers));
+const store = createStore(reducers, persistedState, composeEnhancers(applyMiddleware(thunk)));
+
+store.subscribe(() => {
+  saveState(store.getState());
+});
 
 ReactDOM.render(
   <Provider store={store}>

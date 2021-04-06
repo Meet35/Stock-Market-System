@@ -7,6 +7,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import Icon from './icon';
 import { signin, signup } from '../../actions/auth';
+import { getstocks } from '../../actions/stock';
 import { AUTH } from '../../actions/types';
 import useStyles from './styles';
 import Input from './Input';
@@ -37,6 +38,7 @@ const SignUp = () => {
         } else {
             dispatch(signin(form, history));
         }
+        dispatch(getstocks());
     };
 
     const googleSuccess = async (res) => {

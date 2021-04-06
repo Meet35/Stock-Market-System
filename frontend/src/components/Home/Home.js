@@ -9,6 +9,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import CardHeader from '@material-ui/core/CardHeader';
+import { useDispatch, useSelector } from 'react-redux';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Skeleton } from "@material-ui/lab";
 import { AlpacaClient } from '@master-chief/alpaca'
@@ -20,10 +21,10 @@ require("isomorphic-fetch");
 var whynotcount = [];
 
 const Home = () => {
-    const [info, setInfo] = useState([])
     const [list, setList] = useState([])
     const [disable, setDisable] = useState(false)
     const [loading, setLoading] = useState(false)
+    const stockdata = useSelector((state) => state.stock.stockData);
     const [q, setQ] = useState({ symbol: "A", name: "Agilent Technologies Inc" })
     let history = useHistory();
     var interval;
@@ -79,23 +80,15 @@ const Home = () => {
     useEffect(() => {
         if (localStorage.getItem('profile')) {
             setLoading(false);
-            fetch("https://stock-market-system.herokuapp.com/stock")
-                .then((response) => { return response.json(); })
-                .then((data) => {
-                    setInfo(data);
-                    console.log(data);
-                    //setOption(data.map(({ name, symbol }) => ({ name: name, value: symbol })));
-                    getList().then(() => {
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                        interval = setInterval(() => {
-                            getPrice();
-                        }, 3000);
-                        setLoading(true);
-                    }).catch(() => {
-                        console.log("sometimes it happens");
-                    });
-
-                });
+            getList().then(() => {
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+                interval = setInterval(() => {
+                    getPrice();
+                }, 3000);
+                setLoading(true);
+            }).catch(() => {
+                console.log("sometimes it happens");
+            });
             return () => { clearInterval(interval); };
         }
     }, [])
@@ -173,7 +166,7 @@ const Home = () => {
                                 <Grid item xs>
                                     <Autocomplete
                                         id="combo-box-demo"
-                                        options={info}
+                                        options={stockdata}
                                         getOptionLabel={(option) => option.symbol + " - " + option.name}
                                         getOptionSelected={(option, value) => option.symbol === value.symbol}
                                         style={{ width: 600 }}

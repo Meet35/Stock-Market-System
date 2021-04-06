@@ -14,6 +14,20 @@ export const signin = (formData, router) => async (dispatch) => {
         alert("Invalid Credentials...");
     }
 };
+/*
+export function bindComments(postId) {
+    return function(dispatch) {
+        return API.fetchComments(postId).then(comments => {
+            // dispatch
+            dispatch({
+                type: BIND_COMMENTS,
+                comments,
+                postId
+            });
+        });
+    };
+}*/
+
 
 export const signup = (formData, router) => async (dispatch) => {
     try {
